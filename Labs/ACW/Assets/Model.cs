@@ -24,7 +24,7 @@ namespace Labs.ACW.Assets
             }
             m_Utility = ModelUtility.LoadModel(@"Utility/Models/" + modelName);
             Geometry = new GeoHelper(m_Utility);
-            Transformation = Matrix4.CreateRotationY(0.8f) * Matrix4.CreateTranslation(0, 1f, -60f);
+            Transformation = Matrix4.CreateRotationY(0.8f) * Matrix4.CreateTranslation(0, 0f, 0f);
         }
 
         public override void BindData(int ShaderID)
@@ -64,7 +64,11 @@ namespace Labs.ACW.Assets
                 GL.VertexAttribPointer(vPositionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(vNormallocation);
                 GL.VertexAttribPointer(vNormallocation, 3, VertexAttribPointerType.Float, true, 8 * sizeof(float), 5 * sizeof(float));
-
+                if(vTextureLocation != -1)
+                {
+                    GL.EnableVertexAttribArray(vTextureLocation);
+                    GL.VertexAttribPointer(vTextureLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+                }
 
                 /*GL.GenBuffers(m_VBO_IDs.Length, m_VBO_IDs);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, m_VBO_IDs[0]);

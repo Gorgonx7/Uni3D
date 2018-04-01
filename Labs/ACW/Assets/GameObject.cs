@@ -13,6 +13,7 @@ namespace Labs.ACW.Assets
         Vector4 m_AmbientReflectivity;
         Vector4 m_DiffuseReflectivity;
         Vector4 m_SpecularReflectivity;
+        Vector4 m_Emissive;
         float m_Shininess;
         //Change this to take vec3s? create a new constructor?
         public Material(Vector4 AmbientReflectivtiy, Vector4 DiffuseReflectivity, Vector4 SpecularReflectivity, float Shininess)
@@ -21,6 +22,15 @@ namespace Labs.ACW.Assets
             m_DiffuseReflectivity = DiffuseReflectivity;
             m_SpecularReflectivity = SpecularReflectivity;
             m_Shininess = Shininess * 128;
+            m_Emissive = new Vector4(0, 0, 0, 1);
+        }
+        public Material(Vector4 AmbientReflectivtiy, Vector4 DiffuseReflectivity, Vector4 SpecularReflectivity, float Shininess, Vector4 Emissive)
+        {
+            m_AmbientReflectivity = AmbientReflectivtiy;
+            m_DiffuseReflectivity = DiffuseReflectivity;
+            m_SpecularReflectivity = SpecularReflectivity;
+            m_Shininess = Shininess * 128;
+            m_Emissive = Emissive;
         }
         public void Bind(int ShaderID)
         {
@@ -32,6 +42,8 @@ namespace Labs.ACW.Assets
             GL.Uniform4(Spec, m_SpecularReflectivity);
             int Shin = GL.GetUniformLocation(ShaderID, "uMaterial.Shininess");
             GL.Uniform1(Shin, m_Shininess);
+            int Emi = GL.GetUniformLocation(ShaderID, "uMaterial.Emissive");
+            GL.Uniform4(Emi, m_Emissive);
         }
     }
     abstract class GameObject

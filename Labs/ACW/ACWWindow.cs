@@ -34,9 +34,9 @@ namespace Labs.ACW
         {
             DirectionalLight light = new DirectionalLight(new Vector3(4, 3, 1));
             
-            Vector3 CameraPosition = new Vector3(-1, 0.3f, 1f);
+            Vector3 CameraPosition = new Vector3(0, -1f, -2f);
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
-            mView = Matrix4.CreateTranslation(0, -1, -2f);
+            mView = Matrix4.CreateTranslation(0f, -1, -2f);
             mStaticCamera = new StaticCamera(mView.ExtractTranslation(), CameraDirection, new Vector3(1, 0, 0));
            
             mStaticCamera.SetViewMatrix(mView);
@@ -93,7 +93,8 @@ namespace Labs.ACW
             GL.UniformMatrix4(uProjection, true, ref mProjection);
             light.Bind(mShader.ShaderProgramID);
             #endregion
-            model.Transform(Matrix4.CreateTranslation(new Vector3(0, 0, -5f)));
+            model.Transform(Matrix4.CreateScale(0.5f));
+            model.Transform(Matrix4.CreateTranslation(new Vector3(-0, 6, -30f)));
             base.OnLoad(e);
         }
 
@@ -160,10 +161,7 @@ namespace Labs.ACW
             GL.BindVertexArray(model.GetGeometry().GetVAO_ID());
             model.Draw(mShader.ShaderProgramID);
             GL.DrawElements(PrimitiveType.Triangles, model.GetGeometry().mIndices.Length, DrawElementsType.UnsignedInt, 0);
-            //GL.BindVertexArray(model.GetGeometry().GetVAO_ID());
-            //GL.BindBuffer(BufferTarget.ArrayBuffer, model.GetGeometry().GetVBO_IDs()[0]);
-            //model.Draw(mShader.ShaderProgramID);
-            //GL.DrawArrays(PrimitiveType.Triangles, 0, model.GetGeometry().mVertices.Length);
+            
             GL.BindVertexArray(0);
             this.SwapBuffers();
         }
