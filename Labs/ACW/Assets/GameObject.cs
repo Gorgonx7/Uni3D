@@ -54,12 +54,19 @@ namespace Labs.ACW.Assets
         public GameObject()
         {
             m_Material = new Material(new Vector4(0f, 0f, 0f, 1.0f), new Vector4(0.55f, 0.55f, 0.55f, 1.0f), new Vector4(0.70f, 0.70f, 0.70f, 1.0f), 0.25f);
+            Transformation = Matrix4.Identity;
         }
         public virtual void Draw(int ShaderID)
         {
-            int vModelLocation = GL.GetUniformLocation(ShaderID, "uModel");
-            GL.UniformMatrix4(vModelLocation, true, ref Transformation);
+            GL.UseProgram(ShaderID);
+            GL.BindVertexArray(GetGeometry().GetVAO_ID());
+            int ModelLocation = GL.GetUniformLocation(ShaderID, "uModel");
+            GL.UniformMatrix4(ModelLocation, true, ref Transformation);
             m_Material.Bind(ShaderID);
+        }
+        public Matrix4 GetTransform()
+        {
+            return Transformation;
         }
         public void Transform(Matrix4 pTransform)
         {
@@ -73,6 +80,10 @@ namespace Labs.ACW.Assets
         {
             Geometry.BindBuffer();
             Geometry.GenerateArrayBuffers();
+        }
+        public virtual void Update()
+        {
+
         }
     }
 }

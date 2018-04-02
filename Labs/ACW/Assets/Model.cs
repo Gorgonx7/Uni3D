@@ -16,7 +16,7 @@ namespace Labs.ACW.Assets
         private ShaderUtility m_Shader;
         private int[] m_VBO_IDs; 
         private bool OBJ = false;
-
+        private Texture m_Texture = null;
         public Model(string modelName)
         {
             if(modelName.Substring(modelName.IndexOf('.')) == ".obj"){
@@ -26,15 +26,29 @@ namespace Labs.ACW.Assets
             Geometry = new GeoHelper(m_Utility);
             Transformation = Matrix4.CreateRotationY(0.8f) * Matrix4.CreateTranslation(0, 0f, 0f);
         }
+        public Model(string modelName, string TextureName)
+        {
+            if (modelName.Substring(modelName.IndexOf('.')) == ".obj")
+            {
+                OBJ = true;
+            }
+            m_Utility = ModelUtility.LoadModel(@"Utility/Models/" + modelName);
+            Geometry = new GeoHelper(m_Utility);
+            Transformation = Matrix4.CreateRotationY(0.8f) * Matrix4.CreateTranslation(0, 0f, 0f);
+            m_Texture = new Texture(@"ACW/Assets/Textures/" + TextureName);
 
+        }
         public override void BindData(int ShaderID)
         {
+           
             Geometry.GenerateArrayBuffers();
             GL.BindVertexArray(Geometry.GetVAO_ID());
+            //GL.UseProgram(ShaderID);
             int vPositionLocation = GL.GetAttribLocation(ShaderID, "vPosition");
             int vNormallocation = GL.GetAttribLocation(ShaderID, "vNormal");
             int vTextureLocation = GL.GetAttribLocation(ShaderID, "vTexture");
-            
+            if(m_Texture != null)
+            m_Texture.BindData();
 
             if (!OBJ)
             {
@@ -96,8 +110,15 @@ namespace Labs.ACW.Assets
         }
         public override void Draw(int ShaderID)
         {
-            
+
+
+            if (m_Texture != null)
+            {
+                m_Texture.Bind(ShaderID, 0);
+            }
             base.Draw(ShaderID);
+            
+            GL.DrawElements(PrimitiveType.Triangles, GetGeometry().mIndices.Length, DrawElementsType.UnsignedInt, 0);
         }
         
         public void PassShader(ShaderUtility ShaderUtility)

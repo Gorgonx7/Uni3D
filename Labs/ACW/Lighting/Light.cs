@@ -34,7 +34,7 @@ namespace Labs.ACW.Lighting
             m_LightNumber = s_LightNumber;
             s_LightNumber++;
             m_Position = pPosition;
-            m_DiffuseColour = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+            m_DiffuseColour = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             m_SpecularColour = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             m_ConstantAttenuation = 0;
             m_LinearAttenuation = 1;

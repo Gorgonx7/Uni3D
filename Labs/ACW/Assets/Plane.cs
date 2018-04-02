@@ -70,6 +70,11 @@ namespace Labs.ACW.Assets
             
             //base.BindData(ShaderID);
         }
-        
+        public override void Draw(int ShaderID)
+        {
+            base.Draw(ShaderID);
+            GL.DrawArrays(PrimitiveType.TriangleFan, 0, 4);
+        }
+
     }
 }

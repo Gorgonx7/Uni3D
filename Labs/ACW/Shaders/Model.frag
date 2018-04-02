@@ -4,6 +4,7 @@
 
 in vec4 oSurfacePosition;
 in vec4 oNormal;
+
 uniform vec4 uEyePosition;
 uniform mat4 uView;
 out vec4 FragColour;

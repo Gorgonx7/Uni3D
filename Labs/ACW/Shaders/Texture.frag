@@ -4,9 +4,7 @@
 
 in vec4 oSurfacePosition;
 in vec4 oNormal;
-in vec2 ofragTextCoord;
 
-uniform sampler2D uTexture;
 uniform vec4 uEyePosition;
 uniform mat4 uView;
 
@@ -34,6 +32,9 @@ struct MaterialProperties
 
 uniform MaterialProperties uMaterial;
 
+in vec2 oTexture;
+
+uniform sampler2D uTexture0;
 void main()
 {
 	vec4 viewDirection = normalize(uEyePosition - oSurfacePosition);
@@ -84,5 +85,8 @@ void main()
 		}
 		totalLight = totalLight + diffuseReflection + specularReflection;	
 	}
-	gl_FragColor = vec4(totalLight, 1.0);
+	 vec3 texturecolor = texture(uTexture0, oTexture).rgb;
+	 gl_FragColor = vec4(texturecolor * totalLight, 1.0);
+	 //gl_FragColor = vec4(texturecolor, 1.0);
+	//gl_FragColor = vec4(texture(uTexture0, ofragTextCoord).rgb * totalLight, 1.0);
 }
