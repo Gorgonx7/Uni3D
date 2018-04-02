@@ -60,6 +60,13 @@
     <Compile Include="ACW\Lighting\Spotlight.cs" />
     <Compile Include="ACW\Assets\Model.cs" />
     <Compile Include="ACW\Assets\Sphere.cs" />
+    <Compile Include="ACW\SceneGraph\GeometryNode.cs" />
+    <Compile Include="ACW\SceneGraph\GroupNode.cs" />
+    <Compile Include="ACW\SceneGraph\Node.cs" />
+    <Compile Include="ACW\Helpers\Shader.cs" />
+    <Compile Include="ACW\Helpers\Texture.cs" />
+    <Compile Include="ACW\SceneGraph\RenderVisitor.cs" />
+    <Compile Include="ACW\SceneGraph\TransformNode.cs" />
     <Compile Include="Challenge\ChallengeWindow.cs" />
     <Compile Include="ACW\Assets\GameObject.cs" />
     <Compile Include="Lab1\Lab1Window.cs" />
@@ -82,8 +89,12 @@
     <None Include="ACW\Shaders\Model.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ACW\Shaders\Texture.frag" />
-    <None Include="ACW\Shaders\Texture.vert" />
+    <None Include="ACW\Shaders\Texture.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ACW\Shaders\Texture.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="ACW\Shaders\vSimple.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -133,6 +144,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="ACW\Assets\Textures\MarbleTiles.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lab4\texture.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
