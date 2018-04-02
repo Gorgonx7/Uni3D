@@ -9,12 +9,12 @@ namespace Labs.ACW.Lighting
 {
     class PositionLight : Light
     {
-        private float m_AttenuationFactor;
-        private float m_LiniarAttenuationFactor;
-        private float m_QuadraticAttenuationFactor;
-        public PositionLight(Vector4 pPosition) : base(pPosition)
+       
+        public PositionLight(Vector3 pPosition, Vector3 pAttenuationFactor) : base(new Vector4(pPosition, 1))
         {
-
+            m_ConstantAttenuation = pAttenuationFactor.X;
+            m_LinearAttenuation = pAttenuationFactor.Y;
+            m_QuadraticAttenuation = pAttenuationFactor.Z;
         }
     }
 }

@@ -18,7 +18,7 @@ struct LightProperties {
      float spotCutoff, spotExponent; 
      vec3 spotDirection;
 };
-uniform LightProperties uLight[1];
+uniform LightProperties uLight[3];
 uniform vec4 SceneAmbiance;
 
 struct MaterialProperties 
@@ -85,6 +85,11 @@ void main()
 		}
 		totalLight = totalLight + diffuseReflection + specularReflection;	
 	}
+	//gl_FragColor.r = (diffusepow * light_diffuse_color.r * texcolor.r) + (specularpow * light_specular_color.r);
+	//gl_FragColor.g = (diffusepow * light_diffuse_color.g * texcolor.g) + (specularpow * light_specular_color.g);
+	//gl_FragColor.b = (diffusepow * light_diffuse_color.b * texcolor.b) + (specularpow * light_specular_color.b);
+	//gl_FragColor.a = 1.0;
+
 	 vec3 texturecolor = texture(uTexture0, oTexture).rgb;
 	 gl_FragColor = vec4(texturecolor * totalLight, 1.0);
 	 //gl_FragColor = vec4(texturecolor, 1.0);

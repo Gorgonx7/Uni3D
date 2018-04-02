@@ -33,17 +33,24 @@ namespace Labs.ACW
         private StaticCamera mStaticCamera;
         protected override void OnLoad(EventArgs e)
         {
-            DirectionalLight light = new DirectionalLight(new Vector3(4, 3, 1));
-            
+            PositionLight light = new PositionLight(new Vector3(1, 2f, -10), new Vector3(1f,0.015f,0.0000025f));
+            light.SetDiffuse(new Vector3(1f, 0f, 1));
+            light.SetSpecular(new Vector3(1f, 0, 1f));
+            DirectionalLight dLight = new DirectionalLight(new Vector3(0, 1, 4));
+            dLight.SetDiffuse(new Vector3(0f, 1f, 1f));
+            dLight.SetSpecular(new Vector3(0, 1f, 1f));
+            Spotlight sLight = new Spotlight(new Vector3(0, 3, 2), new Vector3(.7f, 0, 0), 10f, 300f, new Vector3(-0, 4, -30f));
             Vector3 CameraPosition = new Vector3(0, -1f, -2f);
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
-            mView = Matrix4.CreateTranslation(0f, -1, -2f);
+            mView = Matrix4.CreateRotationX(0.5f) * Matrix4.CreateTranslation(0f, -10, -4f);
             mStaticCamera = new StaticCamera(mView.ExtractTranslation(), CameraDirection, new Vector3(1, 0, 0));
            
             mStaticCamera.SetViewMatrix(mView);
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
+            //GL.Enable(EnableCap.CullFace);
+            
+            GL.Enable(EnableCap.Lighting);
             mTextureShader = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/Texture.frag");
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
             
@@ -71,7 +78,8 @@ namespace Labs.ACW
             
             GL.UniformMatrix4(uProjection, true, ref mProjection);
             light.Bind(mTextureShader.ShaderProgramID);
-
+            dLight.Bind(mTextureShader.ShaderProgramID);
+            sLight.Bind(mTextureShader.ShaderProgramID);
             GL.BindVertexArray(0);
             
             
@@ -80,7 +88,7 @@ namespace Labs.ACW
 
            
             model.Transform(Matrix4.CreateScale(0.5f));
-            model.Transform(Matrix4.CreateTranslation(new Vector3(-0, 6, -30f)));
+            model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 0, -30f)));
             base.OnLoad(e);
         }
 
@@ -166,6 +174,7 @@ namespace Labs.ACW
             GL.BindVertexArray(0);
             GeoHelper.DeleteBuffers();
             mShader.Delete();
+            mTextureShader.Delete();
             base.OnUnload(e);
         }
     }

@@ -25,7 +25,7 @@ namespace Labs.ACW.Lighting
         private Vector4 m_Position;
         private Vector4 m_DiffuseColour;
         private Vector4 m_SpecularColour;
-        private float m_ConstantAttenuation, m_LinearAttenuation, m_QuadraticAttenuation;
+        protected float m_ConstantAttenuation, m_LinearAttenuation, m_QuadraticAttenuation;
         protected float m_SpotCutOff, m_SpotExponent;
         protected Vector3 m_SpotDirection;
         protected int m_LightNumber;
@@ -68,7 +68,14 @@ namespace Labs.ACW.Lighting
             GL.Uniform3(SpotlightDirection, m_SpotDirection);
 
         }
-
+        public void SetDiffuse(Vector3 pColour)
+        {
+            m_DiffuseColour = new Vector4(pColour, 1);
+        }
+        public void SetSpecular(Vector3 pColour)
+        {
+            m_SpecularColour = new Vector4(pColour, 1);
+        }
 
     }
 }

@@ -53,7 +53,7 @@ namespace Labs.ACW.Assets
         protected Material m_Material;
         public GameObject()
         {
-            m_Material = new Material(new Vector4(0f, 0f, 0f, 1.0f), new Vector4(0.55f, 0.55f, 0.55f, 1.0f), new Vector4(0.70f, 0.70f, 0.70f, 1.0f), 0.25f);
+            m_Material = new Material(new Vector4(.1f, .1f, .1f, 1.0f), new Vector4(0.55f, 0.55f, 0.55f, 1.0f), new Vector4(0.70f, 0.70f, 0.70f, 1.0f), 0.25f);
             Transformation = Matrix4.Identity;
         }
         public virtual void Draw(int ShaderID)
