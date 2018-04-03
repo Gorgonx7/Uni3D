@@ -39,7 +39,7 @@ namespace Labs.ACW
             DirectionalLight dLight = new DirectionalLight(new Vector3(0, 1, 4));
             dLight.SetDiffuse(new Vector3(0f, 1f, 1f));
             dLight.SetSpecular(new Vector3(0, 1f, 1f));
-            Spotlight sLight = new Spotlight(new Vector3(0, 3, 2), new Vector3(.7f, 0, 0), 10f, 300f, new Vector3(-0, 4, -30f));
+            Spotlight sLight = new Spotlight(new Vector3(0, 3, 5), new Vector3(1f, 0, 0), 2f, 100f, new Vector3(-0, 0, -8f));
             Vector3 CameraPosition = new Vector3(0, -1f, -2f);
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
             mView = Matrix4.CreateRotationX(0.5f) * Matrix4.CreateTranslation(0f, -10, -4f);
@@ -64,8 +64,8 @@ namespace Labs.ACW
             mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
             int uProjection = GL.GetUniformLocation(mShader.ShaderProgramID, "uProjection");
             GL.UniformMatrix4(uProjection, true, ref mProjection);
-            light.Bind(mShader.ShaderProgramID);
-          
+            //light.Bind(mShader.ShaderProgramID);
+            sLight.Bind(mShader.ShaderProgramID);
     
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
@@ -77,9 +77,9 @@ namespace Labs.ACW
             uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
             
             GL.UniformMatrix4(uProjection, true, ref mProjection);
-            light.Bind(mTextureShader.ShaderProgramID);
-            dLight.Bind(mTextureShader.ShaderProgramID);
-            sLight.Bind(mTextureShader.ShaderProgramID);
+            //light.Bind(mTextureShader.ShaderProgramID);
+            //dLight.Bind(mTextureShader.ShaderProgramID);
+            //sLight.Bind(mTextureShader.ShaderProgramID);
             GL.BindVertexArray(0);
             
             
