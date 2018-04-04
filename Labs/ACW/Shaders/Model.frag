@@ -7,7 +7,7 @@ in vec4 oNormal;
 
 uniform vec4 uEyePosition;
 uniform mat4 uView;
-out vec4 FragColour;
+layout(location = 1) out vec4 FragColour;
 
 struct LightProperties { 
 	 vec4 position;   
@@ -17,7 +17,7 @@ struct LightProperties {
      float spotCutoff, spotExponent; 
      vec3 spotDirection;
 };
-uniform LightProperties uLight[1];
+uniform LightProperties uLight[3];
 uniform vec4 SceneAmbiance;
 
 struct MaterialProperties 

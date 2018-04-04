@@ -23,12 +23,14 @@ namespace Labs.ACW.Lighting
         \*/
         private static int s_LightNumber = 0;
         private Vector4 m_Position;
+        private static List<Light> s_Lights = new List<Light>();
         private Vector4 m_DiffuseColour;
         private Vector4 m_SpecularColour;
         protected float m_ConstantAttenuation, m_LinearAttenuation, m_QuadraticAttenuation;
         protected float m_SpotCutOff, m_SpotExponent;
         protected Vector3 m_SpotDirection;
         protected int m_LightNumber;
+        private List<int> m_Shader_IDs = new List<int>();
         public Light(Vector4 pPosition)
         {
             m_LightNumber = s_LightNumber;
@@ -42,9 +44,28 @@ namespace Labs.ACW.Lighting
             m_SpotCutOff = 180;
             m_SpotExponent = 0;
             m_SpotDirection = new Vector3(0, 0, 0);
+            s_Lights.Add(this);
+        }
+        public static List<Light> GetLights()
+        {
+            return s_Lights;
+        }
+        public Vector4 GetPosition()
+        {
+            return m_Position;
+        }
+        public void SetPosition(Vector4 pPosition)
+        {
+            m_Position = pPosition;
+            for (int x = 0; x < m_Shader_IDs.Count; x++)
+            {
+                int uLightPosition = GL.GetUniformLocation(m_Shader_IDs[x],"uLight[" + m_LightNumber + "].position");
+                GL.Uniform4(uLightPosition, m_Position);
+            }
         }
         public virtual void Bind(int ShaderID)
         {
+            m_Shader_IDs.Add(ShaderID);
             // bind these then check the vertex shader to ensure each of the attributes are being created
             int uLightPosition = GL.GetUniformLocation(ShaderID, "uLightPosition");
             GL.Uniform4(uLightPosition, ref m_Position);

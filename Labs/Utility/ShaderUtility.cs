@@ -18,7 +18,7 @@ namespace Labs.Utility
             GL.ShaderSource(VertexShaderID, reader.ReadToEnd());
             reader.Close();
             GL.CompileShader(VertexShaderID);
-
+            
             int result;
             GL.GetShader(VertexShaderID, ShaderParameter.CompileStatus, out result);
             if (result == 0)

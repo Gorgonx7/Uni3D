@@ -12,6 +12,7 @@ namespace Labs.ACW
 {
     class Texture
     {
+        public static List<int> s_TextureIDs = new List<int>();
         Bitmap m_TextureBitmap;
         BitmapData m_TextureData;
         TextureUnit m_Unit;
@@ -40,6 +41,7 @@ namespace Labs.ACW
         {
             GL.ActiveTexture(m_Unit);
             m_TextureID = GL.GenTexture();
+            s_TextureIDs.Add(m_TextureID);
             GL.BindTexture(TextureTarget.Texture2D, m_TextureID);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, m_TextureData.Width, m_TextureData.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, m_TextureData.Scan0);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
@@ -51,6 +53,10 @@ namespace Labs.ACW
             int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture" + SamplerNumber);
             GL.Uniform1(uTextureSamplerLocation, 0);
 
+        }
+        public static void Delete()
+        {
+            GL.DeleteTextures(s_TextureIDs.Count, s_TextureIDs.ToArray());
         }
 
     }

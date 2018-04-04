@@ -50,6 +50,7 @@
     <Compile Include="ACW\ACWWindow.cs" />
     <Compile Include="ACW\Assets\Plane.cs" />
     <Compile Include="ACW\Cameras\Camera.cs" />
+    <Compile Include="ACW\FrameBuffer.cs" />
     <Compile Include="ACW\Helpers\GeoHelper.cs" />
     <Compile Include="ACW\Lighting\GlobalLight.cs" />
     <Compile Include="ACW\Lighting\DirectionalLight.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Utility\ShaderUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ACW\Shaders\FrameBufferPassThrough.frag" />
     <None Include="ACW\Shaders\Model.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -126,6 +128,9 @@
     <None Include="Lab1\Shaders\fSimple.frag" />
     <None Include="Lab1\Shaders\vSimple.vert" />
     <None Include="packages.config" />
+    <None Include="Utility\Models\Cube.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Utility\Models\cylinder.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -146,6 +151,18 @@
   <ItemGroup>
     <Content Include="ACW\Assets\Textures\MarbleTiles.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ACW\Assets\Textures\Paint.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ACW\Assets\Textures\Rope.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ACW\Assets\Textures\Scratches.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ACW\Assets\Textures\Teapot.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Lab4\texture.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OpenTK.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Labs.ACW.Lighting;
 namespace Labs.ACW.Cameras
 {
     abstract class Camera 
@@ -17,6 +18,7 @@ namespace Labs.ACW.Cameras
          * Right
          * 
          */
+         public static Matrix4 s_ViewMatrix { get; protected set; }
         private Vector3 m_Position;
         private Vector3 m_Direction;
         private Vector3 m_Up;
@@ -43,7 +45,10 @@ namespace Labs.ACW.Cameras
         {
             m_View = Matrix4.LookAt(m_Position, pTarget, m_Up);
         }
-
+        public void Activate()
+        {
+            s_ViewMatrix = m_View;
+        }
         public void Transform(Matrix4 pTransform) {
             
             m_View = Matrix4.LookAt(m_Position, Vector3.Transform(m_Direction, pTransform), m_Up);
@@ -60,6 +65,13 @@ namespace Labs.ACW.Cameras
             Vector4 cameraPosition2 = new Vector4(cameraPosition, 1f);
             int uEyePosition = GL.GetUniformLocation(pShaderProgram, "uEyePosition");
             GL.Uniform4(uEyePosition, ref cameraPosition2);
+        }
+        private void MoveCamera()
+        {
+            for (int x = 0; x < Light.GetLights().Count; x++)
+            {
+                Light.GetLights()[x].SetPosition(Vector4.Transform(Light.GetLights()[x].GetPosition(), m_View));
+            }
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Labs.Lab3
 
         private int[] mVBO_IDs = new int[5];
         private int[] mVAO_IDs = new int[3];
+
         private ShaderUtility mShader;
         private ModelUtility mModelUtility, mCylinderModelUtility;
         private Matrix4 mView, mModel, mGroundModel, mCylinderModel;
