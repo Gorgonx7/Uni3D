@@ -11,6 +11,7 @@ layout(location = 1) out vec4 FragColour;
 
 struct LightProperties { 
 	 vec4 position;   
+	 vec4 ambinat;
      vec4 diffuse;
      vec4 specular; 
      float constantAttenuation, linearAttenuation, quadraticAttenuation;
@@ -76,9 +77,11 @@ void main()
 		}
 		else // light source on the right side
 		{
-			specularReflection = attenuation * vec3(uLight[i].specular) * vec3(uMaterial.SpecularReflectivity) * pow(max(0.0, dot(reflect(-lightDirection, holder), vec3(viewDirection))), uMaterial.Shininess);
+			specularReflection = attenuation * vec3(uLight[i].ambiant) * vec3(uMaterial.SpecularReflectivity) * pow(max(0.0, dot(reflect(-lightDirection, holder), vec3(viewDirection))), uMaterial.Shininess);
 		}
-		totalLight = totalLight + diffuseReflection + specularReflection;	
+		vec3 AmbinatReflection = vec3(uLight[i].ambinat) * vec3(uMaterial.AmbientReflectivity);
+
+		totalLight = totalLight + AmbinatReflection + diffuseReflection + specularReflection;	
 	}
 	gl_FragColor = vec4(totalLight, 1.0);
 }

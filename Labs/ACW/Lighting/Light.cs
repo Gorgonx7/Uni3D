@@ -24,6 +24,7 @@ namespace Labs.ACW.Lighting
         private static int s_LightNumber = 0;
         private Vector4 m_Position;
         private static List<Light> s_Lights = new List<Light>();
+        private Vector4 m_AmbiantColour;
         private Vector4 m_DiffuseColour;
         private Vector4 m_SpecularColour;
         protected float m_ConstantAttenuation, m_LinearAttenuation, m_QuadraticAttenuation;
@@ -36,6 +37,7 @@ namespace Labs.ACW.Lighting
             m_LightNumber = s_LightNumber;
             s_LightNumber++;
             m_Position = pPosition;
+            m_AmbiantColour = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             m_DiffuseColour = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             m_SpecularColour = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             m_ConstantAttenuation = 0;
@@ -71,6 +73,8 @@ namespace Labs.ACW.Lighting
             GL.Uniform4(uLightPosition, ref m_Position);
             int Position = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].position");
             GL.Uniform4(Position, ref m_Position);
+            int Ambinat = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].ambiant");
+            GL.Uniform4(Ambinat, m_AmbiantColour);
             int Diffuse = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].diffuse");
             GL.Uniform4(Diffuse, m_DiffuseColour);
             int Specular = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].specular");
@@ -96,6 +100,10 @@ namespace Labs.ACW.Lighting
         public void SetSpecular(Vector3 pColour)
         {
             m_SpecularColour = new Vector4(pColour, 1);
+        }
+        public void SetAmbinat(Vector3 pColour)
+        {
+            m_AmbiantColour = new Vector4(pColour, 1);
         }
 
     }

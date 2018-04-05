@@ -72,6 +72,17 @@ namespace Labs.ACW.Assets
         {
             Transformation *= Matrix4.CreateTranslation(-Transformation.ExtractTranslation()) * pTransform * Matrix4.CreateTranslation(Transformation.ExtractTranslation());
         }
+
+        public void Transform(Vector4 pPoint, float angle)
+        {
+            Vector4 currentPosition = new Vector4(Transformation.ExtractTranslation(),1);
+            Vector4 Distance = currentPosition - pPoint;
+            Transformation *= Matrix4.CreateTranslation(Distance.Xyz) * Matrix4.CreateRotationY(angle) * Matrix4.CreateTranslation(-Distance.Xyz) * Matrix4.CreateRotationY(-angle);
+            //Vector4.Transform(Distance,Matrix4.CreateRotationX(angle));
+            
+
+
+        }
         public GeoHelper GetGeometry()
         {
             return Geometry;

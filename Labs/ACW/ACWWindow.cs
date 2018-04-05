@@ -74,7 +74,7 @@ namespace Labs.ACW
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
 
-            model = new Model("Cube.obj", "MarbleTiles.jpg");
+            model = new Model("utah-teapot.obj", "MarbleTiles.jpg");
             model.BindData(mTextureShader.ShaderProgramID);
 
             mStaticCamera.Bind(mTextureShader.ShaderProgramID);
@@ -91,8 +91,8 @@ namespace Labs.ACW
 
 
            
-            model.Transform(Matrix4.CreateScale(0.5f));
-            model.Transform(Matrix4.CreateScale(1, 40, 40) * m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 0, -10f)));
+            //model.Transform(Matrix4.CreateScale(0.5f));
+            //model.Transform(Matrix4.CreateScale(1, 40, 40) * m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 0, -10f)));
             base.OnLoad(e);
         }
 
@@ -138,7 +138,7 @@ namespace Labs.ACW
         {
  	        base.OnUpdateFrame(e);
             //model.Transform(Matrix4.CreateRotationZ(0.1f));
-            model.Transform(Matrix4.CreateRotationY(0.01f));
+            model.Transform(new Vector4(m_Plane.GetTransform().ExtractTranslation(),1) + new Vector4(0,0,-50,1), 0.01f);
             //model.Transform(Matrix4.CreateTranslation(new Vector3(0,0,-0.09f)));
            // model.Transform(Matrix4.CreateRotationX(0.1f));
             
