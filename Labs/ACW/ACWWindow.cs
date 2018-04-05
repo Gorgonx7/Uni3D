@@ -29,6 +29,7 @@ namespace Labs.ACW
         private GroupNode mRoot;
         private Matrix4 mView, mProjection;
         private Model model;
+        private Model m_Teapot;
         private Plane m_Plane;
         private StaticCamera mStaticCamera;
        // FrameBuffer test;
@@ -44,7 +45,8 @@ namespace Labs.ACW
             
             Vector3 CameraPosition = new Vector3(0, -1f, -2f);
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
-            mView = Matrix4.CreateRotationX(0.5f) * Matrix4.CreateTranslation(0f, -10, -6f);
+            //mView = Matrix4.CreateRotationX(1.571f) * Matrix4.CreateTranslation(0f, -4, -25f);
+            mView = Matrix4.CreateRotationX(0.3f) * Matrix4.CreateTranslation(0, -6, -10);
             mStaticCamera = new StaticCamera(mView.ExtractTranslation(), CameraDirection, new Vector3(1, 0, 0));
            
             mStaticCamera.SetViewMatrix(mView);
@@ -57,7 +59,8 @@ namespace Labs.ACW
             mTextureShader = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/Texture.frag");
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
             
-            
+            model = new Model("SphereTri.obj", "Earth.jpg");
+            m_Teapot = new Model("utah-teapot.obj", "MarbleTiles.jpg");
             GL.UseProgram(mShader.ShaderProgramID);
             //GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mShader.ShaderProgramID);
@@ -65,18 +68,20 @@ namespace Labs.ACW
             Spotlight sLight = new Spotlight(new Vector3(0, 3, 5), new Vector3(1f, 0, 0), 89, 20f, (m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(0,-2.5f,-0f))).ExtractTranslation());
             m_Plane.BindData(mShader.ShaderProgramID) ;
             mStaticCamera.Bind(mShader.ShaderProgramID);
-            mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
+             mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
+            //mProjection = Matrix4.CreateOrthographic((float)ClientRectangle.Width/8, ClientRectangle.Height/8, 0.1f, 100);
             int uProjection = GL.GetUniformLocation(mShader.ShaderProgramID, "uProjection");
             GL.UniformMatrix4(uProjection, true, ref mProjection);
             //light.Bind(mShader.ShaderProgramID);
             sLight.Bind(mShader.ShaderProgramID);
+           // model.BindData(mShader.ShaderProgramID);
     
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
 
-            model = new Model("utah-teapot.obj", "MarbleTiles.jpg");
+            
             model.BindData(mTextureShader.ShaderProgramID);
-
+            m_Teapot.BindData(mTextureShader.ShaderProgramID);
             mStaticCamera.Bind(mTextureShader.ShaderProgramID);
             uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
             
@@ -92,7 +97,8 @@ namespace Labs.ACW
 
            
             //model.Transform(Matrix4.CreateScale(0.5f));
-            //model.Transform(Matrix4.CreateScale(1, 40, 40) * m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 0, -10f)));
+            model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
+            m_Teapot.Transform(Matrix4.CreateScale(0.1f) * m_Plane.GetTransform() * Matrix4.CreateTranslation(6f, 4, -10));
             base.OnLoad(e);
         }
 
@@ -120,6 +126,9 @@ namespace Labs.ACW
                     float ratio = windowHeight / windowWidth;
                     mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
                     GL.UniformMatrix4(uProjectionLocation, true, ref mProjection);
+                    int uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
+
+                    GL.UniformMatrix4(uProjection, true, ref mProjection);
                 }
                 else
                 {
@@ -130,6 +139,9 @@ namespace Labs.ACW
                     float ratio = windowWidth / windowHeight;
                     Matrix4 mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
                     GL.UniformMatrix4(uProjectionLocation, true, ref mProjection);
+                    int uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
+
+                    GL.UniformMatrix4(uProjection, true, ref mProjection);
                 }
             }
         }
@@ -138,7 +150,8 @@ namespace Labs.ACW
         {
  	        base.OnUpdateFrame(e);
             //model.Transform(Matrix4.CreateRotationZ(0.1f));
-            model.Transform(new Vector4(m_Plane.GetTransform().ExtractTranslation(),1) + new Vector4(0,0,-50,1), 0.01f);
+            m_Teapot.Transform(new Vector4(model.GetTransform().ExtractTranslation(),1), 0.01f);
+            model.Transform(Matrix4.CreateRotationY(0.01f));
             //model.Transform(Matrix4.CreateTranslation(new Vector3(0,0,-0.09f)));
            // model.Transform(Matrix4.CreateRotationX(0.1f));
             
@@ -155,8 +168,10 @@ namespace Labs.ACW
             
            
             m_Plane.Draw(mShader.ShaderProgramID);
-            
+            m_Teapot.Draw(mTextureShader.ShaderProgramID);
+
             model.Draw(mTextureShader.ShaderProgramID);
+            
            // GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
            // GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
 

@@ -76,7 +76,7 @@ namespace Labs.ACW.Assets
         public void Transform(Vector4 pPoint, float angle)
         {
             Vector4 currentPosition = new Vector4(Transformation.ExtractTranslation(),1);
-            Vector4 Distance = currentPosition - pPoint;
+            Vector4 Distance = pPoint - currentPosition ;
             Transformation *= Matrix4.CreateTranslation(Distance.Xyz) * Matrix4.CreateRotationY(angle) * Matrix4.CreateTranslation(-Distance.Xyz) * Matrix4.CreateRotationY(-angle);
             //Vector4.Transform(Distance,Matrix4.CreateRotationX(angle));
             

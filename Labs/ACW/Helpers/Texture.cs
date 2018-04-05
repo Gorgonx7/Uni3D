@@ -18,9 +18,11 @@ namespace Labs.ACW
         TextureUnit m_Unit;
         static int textureNumber = 0;
         int m_TextureID;
+        int m_Index;
         public Texture(string Path)
         {
             m_Unit = TextureUnit.Texture0 + textureNumber;
+            m_Index = textureNumber;
             textureNumber++;
             string filepath = @Path;
             
@@ -48,11 +50,16 @@ namespace Labs.ACW
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             m_TextureBitmap.UnlockBits(m_TextureData);
         }
-        public void Bind(int ShaderID, int SamplerNumber)
+        public void Bind(int ShaderID)
         {
-            int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture" + SamplerNumber);
-            GL.Uniform1(uTextureSamplerLocation, 0);
+            int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture0");
+            GL.Uniform1(uTextureSamplerLocation, m_Index);
 
+        }
+        public void Bind(int ShaderID, int TextureNumber)
+        {
+            int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture[" + TextureNumber + "]");
+            GL.Uniform1(uTextureSamplerLocation, m_Index);
         }
         public static void Delete()
         {

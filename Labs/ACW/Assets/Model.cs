@@ -111,12 +111,13 @@ namespace Labs.ACW.Assets
         public override void Draw(int ShaderID)
         {
 
+            base.Draw(ShaderID);
 
             if (m_Texture != null)
             {
-                m_Texture.Bind(ShaderID, 0);
+                m_Texture.Bind(ShaderID);
             }
-            base.Draw(ShaderID);
+           
             
             GL.DrawElements(PrimitiveType.Triangles, GetGeometry().mIndices.Length, DrawElementsType.UnsignedInt, 0);
         }

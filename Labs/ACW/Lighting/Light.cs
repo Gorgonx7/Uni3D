@@ -73,7 +73,7 @@ namespace Labs.ACW.Lighting
             GL.Uniform4(uLightPosition, ref m_Position);
             int Position = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].position");
             GL.Uniform4(Position, ref m_Position);
-            int Ambinat = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].ambiant");
+            int Ambinat = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].ambinat");
             GL.Uniform4(Ambinat, m_AmbiantColour);
             int Diffuse = GL.GetUniformLocation(ShaderID, "uLight[" + m_LightNumber + "].diffuse");
             GL.Uniform4(Diffuse, m_DiffuseColour);

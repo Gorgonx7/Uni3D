@@ -68,7 +68,7 @@ void main()
 					}
 			}
 		}
-		vec3 diffuseReflection = attenuation * vec3(uLight[i].diffuse) * vec3(uMaterial.DiffuseReflectivity) * max(0.0, dot(vec3(oNormal), lightDirection));
+		vec3 diffuseReflection = attenuation * vec3(uLight[i].specular) * vec3(uMaterial.DiffuseReflectivity) * max(0.0, dot(vec3(oNormal), lightDirection));
 		vec3 specularReflection;
 		vec3 holder = normalize(vec3(oNormal));
 		if (dot(holder, lightDirection) < 0.0) // light source on the wrong side?
@@ -77,7 +77,7 @@ void main()
 		}
 		else // light source on the right side
 		{
-			specularReflection = attenuation * vec3(uLight[i].ambiant) * vec3(uMaterial.SpecularReflectivity) * pow(max(0.0, dot(reflect(-lightDirection, holder), vec3(viewDirection))), uMaterial.Shininess);
+			specularReflection = attenuation * vec3(uLight[i].ambinat) * vec3(uMaterial.SpecularReflectivity) * pow(max(0.0, dot(reflect(-lightDirection, holder), vec3(viewDirection))), uMaterial.Shininess);
 		}
 		vec3 AmbinatReflection = vec3(uLight[i].ambinat) * vec3(uMaterial.AmbientReflectivity);
 
