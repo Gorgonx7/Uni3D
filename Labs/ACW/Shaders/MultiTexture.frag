@@ -35,7 +35,7 @@ uniform MaterialProperties uMaterial;
 
 in vec2 oTexture;
 
-uniform sampler2D uTexture0;
+uniform sampler2D uTexture[3];
 
 
 void main()

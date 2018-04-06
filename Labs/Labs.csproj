@@ -144,12 +144,8 @@
     <None Include="Utility\Models\sphere.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Utility\Models\Sphere.obj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Utility\Models\SphereTri.obj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Utility\Models\Sphere.obj" />
+    <None Include="Utility\Models\SphereTri.obj" />
     <None Include="Utility\Models\utah-teapot.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

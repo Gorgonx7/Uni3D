@@ -16,7 +16,7 @@ namespace Labs.ACW
         Bitmap m_TextureBitmap;
         BitmapData m_TextureData;
         TextureUnit m_Unit;
-        static int textureNumber = 0;
+        static int textureNumber = 1;
         int m_TextureID;
         int m_Index;
         public Texture(string Path)
@@ -38,6 +38,15 @@ namespace Labs.ACW
             {
                 throw new Exception("Could not find file " + filepath);
             }
+        }
+        public Texture(Bitmap pBitmap) {
+            m_Unit = TextureUnit.Texture0;
+            m_Index = 0;
+            
+
+            m_TextureBitmap = pBitmap;
+            m_TextureData = m_TextureBitmap.LockBits(new Rectangle(0, 0, m_TextureBitmap.Width, m_TextureBitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+
         }
         public void BindData()
         {
@@ -66,5 +75,12 @@ namespace Labs.ACW
             GL.DeleteTextures(s_TextureIDs.Count, s_TextureIDs.ToArray());
         }
 
+        public void Dispose()
+        {
+            GL.DeleteTexture(m_TextureID);
+            
+        }
+
+ 
     }
 }

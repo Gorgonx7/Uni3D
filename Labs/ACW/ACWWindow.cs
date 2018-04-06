@@ -7,6 +7,10 @@ using Labs.ACW.Cameras;
 using Labs.ACW.Assets;
 using Labs.ACW.Lighting;
 using Labs.ACW.SceneGraph;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+
 namespace Labs.ACW
 {
     public class ACWWindow : GameWindow
@@ -28,15 +32,15 @@ namespace Labs.ACW
         private ShaderUtility mShader, mTextureShader;
         private GroupNode mRoot;
         private Matrix4 mView, mProjection;
-        private Model model;
+        //private Model model;
         private Model m_Teapot;
         private Plane m_Plane;
         private StaticCamera mStaticCamera;
-       // FrameBuffer test;
+        FrameBuffer test;
         protected override void OnLoad(EventArgs e)
         {
             PositionLight light = new PositionLight(new Vector3(1, 2f, -10), new Vector3(1f,0.015f,0.0000025f));
-            //test = new FrameBuffer();
+            
             light.SetDiffuse(new Vector3(1f, 1f, 1));
             light.SetSpecular(new Vector3(1f, 1, 1f));
             DirectionalLight dLight = new DirectionalLight(new Vector3(0, 1, 4));
@@ -59,7 +63,7 @@ namespace Labs.ACW
             mTextureShader = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/Texture.frag");
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
             
-            model = new Model("SphereTri.obj", "Earth.jpg");
+            //model = new Model("SphereTri.obj", "Earth.jpg");
             m_Teapot = new Model("utah-teapot.obj", "MarbleTiles.jpg");
             GL.UseProgram(mShader.ShaderProgramID);
             //GL.UseProgram(mTextureShader.ShaderProgramID);
@@ -80,7 +84,7 @@ namespace Labs.ACW
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
 
             
-            model.BindData(mTextureShader.ShaderProgramID);
+           // model.BindData(mTextureShader.ShaderProgramID);
             m_Teapot.BindData(mTextureShader.ShaderProgramID);
             mStaticCamera.Bind(mTextureShader.ShaderProgramID);
             uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
@@ -97,7 +101,7 @@ namespace Labs.ACW
 
            
             //model.Transform(Matrix4.CreateScale(0.5f));
-            model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
+           // model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
             m_Teapot.Transform(Matrix4.CreateScale(0.1f) * m_Plane.GetTransform() * Matrix4.CreateTranslation(6f, 4, -10));
             base.OnLoad(e);
         }
@@ -150,8 +154,8 @@ namespace Labs.ACW
         {
  	        base.OnUpdateFrame(e);
             //model.Transform(Matrix4.CreateRotationZ(0.1f));
-            m_Teapot.Transform(new Vector4(model.GetTransform().ExtractTranslation(),1), 0.01f);
-            model.Transform(Matrix4.CreateRotationY(0.01f));
+           // m_Teapot.Transform(new Vector4(model.GetTransform().ExtractTranslation(),1), 0.01f);
+          //  model.Transform(Matrix4.CreateRotationY(0.01f));
             //model.Transform(Matrix4.CreateTranslation(new Vector3(0,0,-0.09f)));
            // model.Transform(Matrix4.CreateRotationX(0.1f));
             
@@ -159,21 +163,21 @@ namespace Labs.ACW
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            
 
+            test = new FrameBuffer();
             base.OnRenderFrame(e);
-           // test.Draw();
+            test.Draw();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             
            
             m_Plane.Draw(mShader.ShaderProgramID);
             m_Teapot.Draw(mTextureShader.ShaderProgramID);
+            Bitmap Frame = test.GetData();
+            //Just render the quad from (-1,-1) to (1,1) and set your modelview and projection matrices to the identity. 
+            //Turn off depth testing. Your quad then goes into and covers the screen in homogeneous coords. 
+            //By setting glViewport you can make it cover the whole screen or even (for debug) cover some part of the screen.
 
-            model.Draw(mTextureShader.ShaderProgramID);
-            
-           // GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-           // GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
 
             GL.BindVertexArray(0);
             this.SwapBuffers();
@@ -182,8 +186,8 @@ namespace Labs.ACW
         {
             mRoot = new GroupNode();
             TransformNode WorldTransform = new TransformNode(Matrix4.CreateTranslation(new Vector3(-0, 6, -30f)));
-            GeometryNode geometryNode = new GeometryNode(model, mShader.ShaderProgramID);
-            WorldTransform.AddNode(geometryNode);
+           // GeometryNode geometryNode = new GeometryNode(model, mShader.ShaderProgramID);
+           // WorldTransform.AddNode(geometryNode);
             mRoot.AddNode(WorldTransform);
 
         }
