@@ -51,6 +51,7 @@ namespace Labs.ACW.Assets
         protected Matrix4 Transformation;
         protected GeoHelper Geometry;
         protected Material m_Material;
+        protected Texture m_Texture = null;
         public GameObject()
         {
             m_Material = new Material(new Vector4(.1f, .1f, .1f, 1.0f), new Vector4(0.55f, 0.55f, 0.55f, 1.0f), new Vector4(0.70f, 0.70f, 0.70f, 1.0f), 0.25f);
@@ -83,6 +84,10 @@ namespace Labs.ACW.Assets
 
 
         }
+        public void setTexture(Texture pTexture)
+        {
+            m_Texture = pTexture;
+        }
         public GeoHelper GetGeometry()
         {
             return Geometry;
@@ -91,6 +96,8 @@ namespace Labs.ACW.Assets
         {
             Geometry.BindBuffer();
             Geometry.GenerateArrayBuffers();
+            if (m_Texture != null);
+            m_Texture.BindData();
         }
         public virtual void Update()
         {

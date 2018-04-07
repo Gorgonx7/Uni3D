@@ -13,10 +13,10 @@ namespace Labs.ACW.Assets
         // create a plane in the world that is of width w and height h for use when testing texturing and lighting, 
         //should be easy enough to create using a standared array with scaling as I have no need for collision;
 
-        float[] vertices = new float[] {-10, 0, -10, 0, 1, 0,
-                                        -10, 0,  10, 0, 1, 0,
-                                         10, 0,  10, 0, 1, 0,
-                                         10, 0, -10, 0, 1, 0};
+        float[] vertices = new float[] {-10, 0, -10, 0, 1, 0, 0, 0,
+                                        -10, 0,  10, 0, 1, 0, 0, 1,
+                                         10, 0,  10, 0, 1, 0, 1, 1,
+                                         10, 0, -10, 0, 1, 0, 1, 0};
 
 
         
@@ -54,20 +54,28 @@ namespace Labs.ACW.Assets
             Transformation = Matrix4.CreateTranslation(0, 0, -5f);
             
         }
+        public Plane(Texture texture)
+        {
+            m_Texture = texture;
+        }
         public override void BindData(int ShaderID)
         {
             int vPositionLocation = GL.GetAttribLocation(ShaderID, "vPosition");
             int vNormallocation = GL.GetAttribLocation(ShaderID, "vNormal");
-            Geometry = new GeoHelper(vertices, 6);
+            Geometry = new GeoHelper(vertices, 8);
             
             Geometry.GenerateArrayBuffers();
             GL.BindVertexArray(Geometry.GetVAO_ID());
             Geometry.BindBuffer();
             GL.EnableVertexAttribArray(vPositionLocation);
-            GL.VertexAttribPointer(vPositionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            GL.VertexAttribPointer(vPositionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             GL.EnableVertexAttribArray(vNormallocation);
-            GL.VertexAttribPointer(vNormallocation, 3, VertexAttribPointerType.Float, true, 6 * sizeof(float), 3 * sizeof(float));
-            
+            GL.VertexAttribPointer(vNormallocation, 3, VertexAttribPointerType.Float, true, 8 * sizeof(float), 3 * sizeof(float));
+            if(m_Texture != null)
+            {
+                int vTextureLocation = GL.GetAttribLocation(ShaderID, "vTexture");
+                GL.VertexAttribPointer(vTextureLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            }
             //base.BindData(ShaderID);
         }
         public override void Draw(int ShaderID)

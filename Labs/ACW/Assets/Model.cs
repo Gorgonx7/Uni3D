@@ -16,7 +16,7 @@ namespace Labs.ACW.Assets
         private ShaderUtility m_Shader;
         private int[] m_VBO_IDs; 
         private bool OBJ = false;
-        private Texture m_Texture = null;
+        
         public Model(string modelName)
         {
             if(modelName.Substring(modelName.IndexOf('.')) == ".obj"){
@@ -38,6 +38,7 @@ namespace Labs.ACW.Assets
             m_Texture = new Texture(@"ACW/Assets/Textures/" + TextureName);
 
         }
+        
         public override void BindData(int ShaderID)
         {
            
@@ -48,7 +49,7 @@ namespace Labs.ACW.Assets
             int vNormallocation = GL.GetAttribLocation(ShaderID, "vNormal");
             int vTextureLocation = GL.GetAttribLocation(ShaderID, "vTexture");
             if(m_Texture != null)
-            m_Texture.BindData();
+                m_Texture.BindData();
 
             if (!OBJ)
             {
@@ -66,14 +67,7 @@ namespace Labs.ACW.Assets
             else
             {
                 Geometry.BindBuffer();
-                if (vTextureLocation == -1)
-                {
-                    m_VBO_IDs = new int[3];
-                }
-                else
-                {
-                    m_VBO_IDs = new int[4];
-                }
+                
                 GL.EnableVertexAttribArray(vPositionLocation);
                 GL.VertexAttribPointer(vPositionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(vNormallocation);
