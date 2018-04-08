@@ -168,22 +168,25 @@ namespace Labs.ACW
             PostProcessor.RenderToBuffer();
             test = new FrameBuffer();
             base.OnRenderFrame(e);
-            test.Draw();PostProcessor.SimpleRender(test.GetData(), ClientRectangle);
-            GL.Viewport(ClientRectangle);
+            test.Draw();
+            
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             
            
             m_Plane.Draw(mShader.ShaderProgramID);
+            //PostProcessor.SimpleRender(test.GetData(), ClientRectangle);
+            m_Teapot.setTexture(new Texture(test.GetData()));
             m_Teapot.Draw(mTextureShader.ShaderProgramID);
+           
             //Bitmap Frame = test.GetData();
             //Just render the quad from (-1,-1) to (1,1) and set your modelview and projection matrices to the identity. 
             //Turn off depth testing. Your quad then goes into and covers the screen in homogeneous coords. 
             //By setting glViewport you can make it cover the whole screen or even (for debug) cover some part of the screen.
 
             //m_Teapot.setTexture(new Texture(test.GetData()));
-            
-           // m_Teapot.Draw(mTextureShader.ShaderProgramID);
+
+            // m_Teapot.Draw(mTextureShader.ShaderProgramID);
             //m_Plane.Draw(mShader.ShaderProgramID);
             //m_Teapot.Draw(mTextureShader.ShaderProgramID);
             GL.BindVertexArray(0);
