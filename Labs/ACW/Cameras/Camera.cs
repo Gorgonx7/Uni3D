@@ -81,7 +81,7 @@ namespace Labs.ACW.Cameras
             m_View *= pTransform;
             for (int x = 0; x < Light.GetLights().Count; x++)
             {
-                Light.GetLights()[x].SetPosition(Vector4.Transform(Light.GetLights()[x].GetPosition(), m_View));
+                Light.GetLights()[x].SetPosition(Vector4.Transform(Light.GetLights()[x].GetPosition(), pTransform));
             }
             Activate();
         }
