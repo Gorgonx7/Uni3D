@@ -64,7 +64,7 @@ namespace Labs.ACW
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
             
             //model = new Model("SphereTri.obj", "Earth.jpg");
-            m_Teapot = new Model("Plane.obj", "Teapot.jpg");
+            m_Teapot = new Model("utah-teapot.obj", "Teapot.jpg");
             m_Plane = new Plane(0,0);
             GL.UseProgram(mShader.ShaderProgramID);
             //GL.UseProgram(mTextureShader.ShaderProgramID);
@@ -165,10 +165,10 @@ namespace Labs.ACW
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            PostProcessor.RenderToBuffer();
-            test = new FrameBuffer();
+            //PostProcessor.RenderToBuffer();
+            //test = new FrameBuffer();
             base.OnRenderFrame(e);
-            test.Draw();
+            //test.Draw();
             
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
@@ -176,7 +176,11 @@ namespace Labs.ACW
            
             m_Plane.Draw(mShader.ShaderProgramID);
             //PostProcessor.SimpleRender(test.GetData(), ClientRectangle);
-            m_Teapot.setTexture(new Texture(test.GetData()));
+            //m_Teapot.setTexture(new Texture(test.GetData()));
+            GL.Viewport(ClientRectangle);
+            //GL.Disable(EnableCap.Lighting);
+            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
             m_Teapot.Draw(mTextureShader.ShaderProgramID);
            
             //Bitmap Frame = test.GetData();
