@@ -61,6 +61,7 @@ namespace Labs.ACW.Lighting
             m_Position = pPosition;
             for (int x = 0; x < m_Shader_IDs.Count; x++)
             {
+                GL.UseProgram(m_Shader_IDs[x]);
                 int uLightPosition = GL.GetUniformLocation(m_Shader_IDs[x],"uLight[" + m_LightNumber + "].position");
                 GL.Uniform4(uLightPosition, m_Position);
             }
