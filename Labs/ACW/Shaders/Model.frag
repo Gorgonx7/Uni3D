@@ -6,7 +6,7 @@ in vec4 oSurfacePosition;
 in vec4 oNormal;
 
 uniform vec4 uEyePosition;
-uniform mat4 uView;
+
 layout(location = 1) out vec4 FragColour;
 
 struct LightProperties { 

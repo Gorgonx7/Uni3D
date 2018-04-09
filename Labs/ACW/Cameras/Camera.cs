@@ -7,6 +7,8 @@ using OpenTK.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Labs.ACW.Lighting;
+using Labs.Utility;
+using Labs.ACW.Assets;
 namespace Labs.ACW.Cameras
 {
     abstract class Camera 
@@ -18,19 +20,21 @@ namespace Labs.ACW.Cameras
          * Right
          * 
          */
-         public static Matrix4 s_ViewMatrix { get; protected set; }
+        
         public static Camera s_ActiveCamera { get; protected set; } 
         private Vector3 m_Position;
         private Vector3 m_Direction;
         private Vector3 m_Up;
         private Vector3 m_Right;
         protected Matrix4 m_View;
-        public Camera(Vector3 pPosition, Vector3 pDirection, Vector3 pRight)
+        protected Matrix4 m_Projection;
+        public Camera(Vector3 pPosition, Vector3 pDirection, Vector3 pRight, Matrix4 pProjection)
         {
             m_Position = pPosition;
             m_Direction = pDirection;
             m_Right = pRight;
             m_Up = Vector3.Cross(pDirection, pRight);
+            m_Projection = pProjection;
             //right up forward position
            /* m_View = new Matrix4(m_Right[0], m_Up[0], m_Direction[0], m_Position[0], 
                                  m_Right[1], m_Up[1], m_Direction[1], m_Position[1], 
@@ -38,8 +42,9 @@ namespace Labs.ACW.Cameras
                                  0,          0,       0,              1);*/
             
         }
-        public Camera(Matrix4 pTransform)
+        public Camera(Matrix4 pTransform, Matrix4 pProjection)
         {
+            m_Projection = pProjection;
             m_View = pTransform;
             m_Position = pTransform.ExtractTranslation();
         }
@@ -53,26 +58,24 @@ namespace Labs.ACW.Cameras
         }
         public void Activate()
         {
-            s_ViewMatrix = m_View;
+            
             s_ActiveCamera = this;
+            for (int x = 0; x < ShaderUtility.ShaderIDs.Count; x++)
+            {
+                GL.UseProgram(ShaderUtility.ShaderIDs[x]);
+                int uView = GL.GetUniformLocation(ShaderUtility.ShaderIDs[x], "uView");
+                GL.UniformMatrix4(uView, true, ref m_View);
+                int uProjection = GL.GetUniformLocation(ShaderUtility.ShaderIDs[x], "uProjection");
+                GL.UniformMatrix4(uProjection, true, ref m_Projection);
+            }
+
         }
         public void Transform(Matrix4 pTransform) {
-            
-            m_View = Matrix4.LookAt(m_Position, Vector3.Transform(m_Direction, pTransform), m_Up);
-            m_Direction = Vector3.Transform(m_Direction, pTransform);
+
+            MoveCamera(pTransform);
             
         }
-        public void Bind(int pShaderProgram)
-        {
-            
-            
-            int uView = GL.GetUniformLocation(pShaderProgram, "uView");
-            GL.UniformMatrix4(uView, true, ref m_View);            
-            Vector3 cameraPosition = m_View.ExtractTranslation();
-            Vector4 cameraPosition2 = new Vector4(cameraPosition, 1f);
-            int uEyePosition = GL.GetUniformLocation(pShaderProgram, "uEyePosition");
-            GL.Uniform4(uEyePosition, ref cameraPosition2);
-        }
+        
         protected virtual void MoveCamera(Matrix4 pTransform)
         {
             m_View *= pTransform;
@@ -80,6 +83,7 @@ namespace Labs.ACW.Cameras
             {
                 Light.GetLights()[x].SetPosition(Vector4.Transform(Light.GetLights()[x].GetPosition(), m_View));
             }
+            Activate();
         }
     }
 }

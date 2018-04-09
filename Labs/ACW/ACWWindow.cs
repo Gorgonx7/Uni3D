@@ -35,7 +35,7 @@ namespace Labs.ACW
         //private Model model;
         private Model m_Teapot;
         private Plane m_Plane;
-        private StaticCamera mStaticCamera;
+        private PlayerCamera mStaticCamera;
         FrameBuffer test;
         protected override void OnLoad(EventArgs e)
         {
@@ -51,10 +51,10 @@ namespace Labs.ACW
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
             //mView = Matrix4.CreateRotationX(1.571f) * Matrix4.CreateTranslation(0f, -4, -25f);
             mView = Matrix4.CreateRotationX(0.3f) * Matrix4.CreateTranslation(0, -6, -10);
-            mStaticCamera = new StaticCamera(mView.ExtractTranslation(), CameraDirection, new Vector3(1, 0, 0));
+            mStaticCamera = new PlayerCamera(mView, ClientRectangle);
            
             mStaticCamera.SetViewMatrix(mView);
-            mStaticCamera.Activate();
+           
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
             //GL.Enable(EnableCap.CullFace);
@@ -62,37 +62,37 @@ namespace Labs.ACW
             GL.Enable(EnableCap.Lighting);
             mTextureShader = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/Texture.frag");
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
-            mSimpleTexture = new ShaderUtility("ACW/Shaders/TextureSimple.vert", "ACW/Shaders/TextureSimple.frag");
+            
+            
             //model = new Model("SphereTri.obj", "Earth.jpg");
             m_Teapot = new Model("utah-teapot.obj", "Teapot.jpg");
             m_Plane = new Plane(0,0);
+            Spotlight sLight = new Spotlight(new Vector3(0, 3, 5), new Vector3(1f, 0, 0), 89, 20f, (m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(0,-2.5f,-0f))).ExtractTranslation());
+          
             GL.UseProgram(mShader.ShaderProgramID);
             //GL.UseProgram(mTextureShader.ShaderProgramID);
-            GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mShader.ShaderProgramID);
+            //GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mShader.ShaderProgramID);
            
-            Spotlight sLight = new Spotlight(new Vector3(0, 3, 5), new Vector3(1f, 0, 0), 89, 20f, (m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(0,-2.5f,-0f))).ExtractTranslation());
             m_Plane.BindData(mShader.ShaderProgramID) ;
-            mStaticCamera.Bind(mShader.ShaderProgramID);
-             mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
+            
+             
             //mProjection = Matrix4.CreateOrthographic((float)ClientRectangle.Width/8, ClientRectangle.Height/8, 0.1f, 100);
-            int uProjection = GL.GetUniformLocation(mShader.ShaderProgramID, "uProjection");
-            GL.UniformMatrix4(uProjection, true, ref mProjection);
-            //light.Bind(mShader.ShaderProgramID);
-            sLight.Bind(mShader.ShaderProgramID);
+            
+            light.Bind(mShader.ShaderProgramID);
+            //sLight.Bind(mShader.ShaderProgramID);
            // model.BindData(mShader.ShaderProgramID);
     
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
-
+            m_Teapot.BindData(mTextureShader.ShaderProgramID);
             
            // model.BindData(mTextureShader.ShaderProgramID);
            
             //m_Plane.BindData(mTextureShader.ShaderProgramID);
-            mStaticCamera.Bind(mTextureShader.ShaderProgramID);
-            uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
-            m_Teapot.BindData(mTextureShader.ShaderProgramID);
-            GL.UniformMatrix4(uProjection, true, ref mProjection);
-            light.Bind(mTextureShader.ShaderProgramID);
+           
+            
+            
+            //light.Bind(mTextureShader.ShaderProgramID);
             dLight.Bind(mTextureShader.ShaderProgramID);
             sLight.Bind(mTextureShader.ShaderProgramID);
             GL.BindVertexArray(0);
@@ -108,7 +108,9 @@ namespace Labs.ACW
 
             //model.Transform(Matrix4.CreateScale(0.5f));
             // model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
+            
             m_Teapot.Transform(Matrix4.CreateScale(0.1f) * m_Plane.GetTransform() * Matrix4.CreateTranslation(0f, 4, -0.5f));
+            mStaticCamera.Activate();
             test = new FrameBuffer();
             base.OnLoad(e);
         }
@@ -116,6 +118,27 @@ namespace Labs.ACW
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
+            switch (e.KeyChar)
+            {
+                case 'd':
+                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(0.025f));
+                    break;
+                case 'a':
+                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(-0.025f));
+                    break;
+                case 's':
+                    Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(0.0f, 0.0f, -0.05f));
+
+                    break;
+                case 'w':
+                    Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(0.0f, 0.0f, 0.05f));
+
+                    break;
+                case 'z':
+                    break;
+                case 'x':
+                    break;
+            }
         }
 
         protected override void OnResize(EventArgs e)

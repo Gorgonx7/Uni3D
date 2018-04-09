@@ -48,12 +48,14 @@ namespace Labs.ACW.Assets
     }
     abstract class GameObject
     {
-        protected Matrix4 Transformation;
+        public static List<GameObject> s_Objects = new List<GameObject>();
+        public Matrix4 Transformation;
         protected GeoHelper Geometry;
         protected Material m_Material;
         protected Texture m_Texture = null;
         public GameObject()
         {
+            s_Objects.Add(this);
             m_Material = new Material(new Vector4(.1f, .1f, .1f, 1.0f), new Vector4(0.55f, 0.55f, 0.55f, 1.0f), new Vector4(0.70f, 0.70f, 0.70f, 1.0f), 0.25f);
             Transformation = Matrix4.Identity;
         }
@@ -73,7 +75,10 @@ namespace Labs.ACW.Assets
         {
             Transformation *= Matrix4.CreateTranslation(-Transformation.ExtractTranslation()) * pTransform * Matrix4.CreateTranslation(Transformation.ExtractTranslation());
         }
-
+        public void SetTransform(Matrix4 pTransform)
+        {
+            Transformation = pTransform;
+        }
         public void Transform(Vector4 pPoint, float angle)
         {
             Vector4 currentPosition = new Vector4(Transformation.ExtractTranslation(),1);

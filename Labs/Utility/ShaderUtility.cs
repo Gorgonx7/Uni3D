@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace Labs.Utility
 {
     public class ShaderUtility
     {
+        public static List<int> ShaderIDs = new List<int>();
         public int ShaderProgramID { get; private set; }
         public int VertexShaderID { get; private set; }
         public int FragmentShaderID { get; private set; }
@@ -39,6 +41,7 @@ namespace Labs.Utility
             }
 
             ShaderProgramID = GL.CreateProgram();
+            ShaderIDs.Add(ShaderProgramID);
             GL.AttachShader(ShaderProgramID, VertexShaderID);
             GL.AttachShader(ShaderProgramID, FragmentShaderID);
             GL.LinkProgram(ShaderProgramID);
