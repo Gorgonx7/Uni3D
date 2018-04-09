@@ -12,5 +12,11 @@ namespace Labs.ACW.Cameras
         {
 
         }
+        protected override void MoveCamera(Matrix4 pTransform)
+        {
+            
+            base.MoveCamera(pTransform);
+
+        }
     }
 }

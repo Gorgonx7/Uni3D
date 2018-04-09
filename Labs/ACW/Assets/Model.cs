@@ -102,6 +102,10 @@ namespace Labs.ACW.Assets
             
 
         }
+        public void DeleteTexture()
+        {
+            this.m_Texture.Dispose();
+        }
         public override void Draw(int ShaderID)
         {
 

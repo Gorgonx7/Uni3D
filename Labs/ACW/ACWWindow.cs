@@ -29,7 +29,7 @@ namespace Labs.ACW
                 )
         {
         }
-        private ShaderUtility mShader, mTextureShader;
+        private ShaderUtility mShader, mTextureShader, mSimpleTexture;
         private GroupNode mRoot;
         private Matrix4 mView, mProjection;
         //private Model model;
@@ -62,7 +62,7 @@ namespace Labs.ACW
             GL.Enable(EnableCap.Lighting);
             mTextureShader = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/Texture.frag");
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
-            
+            mSimpleTexture = new ShaderUtility("ACW/Shaders/TextureSimple.vert", "ACW/Shaders/TextureSimple.frag");
             //model = new Model("SphereTri.obj", "Earth.jpg");
             m_Teapot = new Model("utah-teapot.obj", "Teapot.jpg");
             m_Plane = new Plane(0,0);
@@ -86,25 +86,30 @@ namespace Labs.ACW
 
             
            // model.BindData(mTextureShader.ShaderProgramID);
-            m_Teapot.BindData(mTextureShader.ShaderProgramID);
+           
             //m_Plane.BindData(mTextureShader.ShaderProgramID);
             mStaticCamera.Bind(mTextureShader.ShaderProgramID);
             uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
-            
+            m_Teapot.BindData(mTextureShader.ShaderProgramID);
             GL.UniformMatrix4(uProjection, true, ref mProjection);
             light.Bind(mTextureShader.ShaderProgramID);
             dLight.Bind(mTextureShader.ShaderProgramID);
             sLight.Bind(mTextureShader.ShaderProgramID);
             GL.BindVertexArray(0);
-            
-            
-            
 
-
+            /*GL.UseProgram(mSimpleTexture.ShaderProgramID);
            
+            mStaticCamera.Bind(mSimpleTexture.ShaderProgramID);
+            uProjection = GL.GetUniformLocation(mSimpleTexture.ShaderProgramID, "uProjection");
+            GL.UniformMatrix4(uProjection, true, ref mProjection);*/
+
+
+
+
             //model.Transform(Matrix4.CreateScale(0.5f));
-           // model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
+            // model.Transform(m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
             m_Teapot.Transform(Matrix4.CreateScale(0.1f) * m_Plane.GetTransform() * Matrix4.CreateTranslation(0f, 4, -0.5f));
+            test = new FrameBuffer();
             base.OnLoad(e);
         }
 
@@ -166,36 +171,22 @@ namespace Labs.ACW
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             //PostProcessor.RenderToBuffer();
-            //test = new FrameBuffer();
+            
             base.OnRenderFrame(e);
-            //test.Draw();
-            
+            //Prepare();
+            //Render();
+            test.Draw();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            
-            
-           
-            m_Plane.Draw(mShader.ShaderProgramID);
-            //PostProcessor.SimpleRender(test.GetData(), ClientRectangle);
-            //m_Teapot.setTexture(new Texture(test.GetData()));
-            GL.Viewport(ClientRectangle);
-            //GL.Disable(EnableCap.Lighting);
-            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
             m_Teapot.Draw(mTextureShader.ShaderProgramID);
-           
-            //Bitmap Frame = test.GetData();
-            //Just render the quad from (-1,-1) to (1,1) and set your modelview and projection matrices to the identity. 
-            //Turn off depth testing. Your quad then goes into and covers the screen in homogeneous coords. 
-            //By setting glViewport you can make it cover the whole screen or even (for debug) cover some part of the screen.
+            m_Plane.Draw(mShader.ShaderProgramID);
+            test.Dump(ClientRectangle);
 
-            //m_Teapot.setTexture(new Texture(test.GetData()));
 
-            // m_Teapot.Draw(mTextureShader.ShaderProgramID);
-            //m_Plane.Draw(mShader.ShaderProgramID);
-            //m_Teapot.Draw(mTextureShader.ShaderProgramID);
             GL.BindVertexArray(0);
             this.SwapBuffers();
         }
+        
+
         private void MakeTree()
         {
             mRoot = new GroupNode();

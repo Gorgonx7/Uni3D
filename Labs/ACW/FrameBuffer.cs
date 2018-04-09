@@ -42,22 +42,31 @@ namespace Labs.ACW
                 throw new Exception("Framebuffer incomplete");
             }
         }
-        public Bitmap GetData()
+        public void GetData()
         {
-            Bitmap b = new Bitmap(ClientWidth, ClientHeight);
-            var bits = b.LockBits(new Rectangle(0, 0, ClientWidth, ClientHeight), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            GL.ReadPixels(0, 0, ClientWidth, ClientHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bits.Scan0);
+            //Bitmap b = new Bitmap(ClientWidth, ClientHeight);
+            //var bits = b.LockBits(new Rectangle(0, 0, ClientWidth, ClientHeight), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            //GL.ReadPixels(0, 0, ClientWidth, ClientHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bits.Scan0);
             GL.Ext.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.Ext.DeleteFramebuffers(1, ref FramebufferID);
-            b.UnlockBits(bits);
-            return b;
+           // b.UnlockBits(bits);
+            //return b;
         }
         public void Draw()
         {
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.Enable(EnableCap.Texture2D);
             GL.BindFramebuffer( FramebufferTarget.Framebuffer, FramebufferID);
             GL.Viewport(0, 0, 1024, 768);
 
+        }
+        public void Dump(Rectangle ClientRectangle)
+        {
+            GL.BindFramebuffer( FramebufferTarget.ReadFramebuffer, FramebufferID);
+            GL.ReadBuffer( ReadBufferMode.ColorAttachment0);
+            GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
+            GL.Viewport(ClientRectangle);
+            GL.BlitFramebuffer(0, 0, ClientWidth, ClientHeight, 0, 0, ClientRectangle.Width, ClientRectangle.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
         }
         public int GetTexture()
         {

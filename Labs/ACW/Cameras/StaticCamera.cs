@@ -12,5 +12,9 @@ namespace Labs.ACW.Cameras
         public StaticCamera(Vector3 pPosition, Vector3 pDirection, Vector3 pRight) : base(pPosition, pDirection, pRight) {
             
         }
+        protected override void MoveCamera(Matrix4 pTransform)
+        {
+            //base.MoveCamera(pTransform);
+        }
     }
 }

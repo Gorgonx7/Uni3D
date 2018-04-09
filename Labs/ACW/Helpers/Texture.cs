@@ -78,7 +78,9 @@ namespace Labs.ACW
         public void Dispose()
         {
             GL.DeleteTexture(m_TextureID);
-            
+            s_TextureIDs.Remove(m_TextureID);
+            m_TextureData = null;
+            m_TextureBitmap.Dispose();
         }
 
  
