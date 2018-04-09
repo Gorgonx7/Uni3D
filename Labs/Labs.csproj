@@ -97,7 +97,15 @@
     <None Include="ACW\Shaders\Model.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ACW\Shaders\MultiTexture.frag" />
+    <None Include="ACW\Shaders\MultiTexture.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ACW\Shaders\TextureSimple.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ACW\Shaders\TextureSimple.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="ACW\Shaders\Texture.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
