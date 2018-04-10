@@ -35,7 +35,7 @@ uniform MaterialProperties uMaterial;
 
 in vec2 oTexture;
 
-uniform sampler2D uTexture[3];
+uniform sampler2D uTexture[2];
 
 
 void main()
@@ -86,16 +86,15 @@ void main()
 		{
 			specularReflection = attenuation * vec3(uLight[i].specular) * vec3(uMaterial.SpecularReflectivity) * pow(max(0.0, dot(reflect(-lightDirection, holder), vec3(viewDirection))), uMaterial.Shininess);
 		}
+		
+		
 		vec3 AmbinatReflection = vec3(uLight[i].ambinat * uMaterial.AmbientReflectivity);
 		totalLight = totalLight + AmbinatReflection + diffuseReflection + specularReflection;	
 	}
-	//gl_FragColor.r = (diffusepow * light_diffuse_color.r * texcolor.r) + (specularpow * light_specular_color.r);
-	//gl_FragColor.g = (diffusepow * light_diffuse_color.g * texcolor.g) + (specularpow * light_specular_color.g);
-	//gl_FragColor.b = (diffusepow * light_diffuse_color.b * texcolor.b) + (specularpow * light_specular_color.b);
-	//gl_FragColor.a = 1.0;
-
-	 vec3 texturecolor = texture(uTexture0, oTexture).rgb;
-	 gl_FragColor = vec4(texturecolor * totalLight, 1.0);
-	 //gl_FragColor = vec4(texturecolor, 1.0);
-	//gl_FragColor = vec4(texture(uTexture0, ofragTextCoord).rgb * totalLight, 1.0);
+	
+	vec4 TextureColour1 = texture(uTexture[0], oTexture);
+	vec4 TextureColour2 = texture(uTexture[1], oTexture); 
+	vec4 texturecolor = mix(TextureColour1, TextureColour2, TextureColour2.a);
+	 gl_FragColor = texturecolor * vec4(totalLight, 1.0);
+	 
 }

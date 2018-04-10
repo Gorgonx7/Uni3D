@@ -16,7 +16,7 @@ namespace Labs.ACW.Assets
         private ShaderUtility m_Shader;
         private int[] m_VBO_IDs; 
         private bool OBJ = false;
-        
+        public Texture[] m_Textures = null;
         public Model(string modelName)
         {
             if(modelName.Substring(modelName.IndexOf('.')) == ".obj"){
@@ -38,7 +38,20 @@ namespace Labs.ACW.Assets
             m_Texture = new Texture(@"ACW/Assets/Textures/" + TextureName);
 
         }
-        
+        public Model(string modelName, string[] pTextureNames)
+        {
+            if (modelName.Substring(modelName.IndexOf('.')) == ".obj")
+            {
+                OBJ = true;
+            }
+            m_Utility = ModelUtility.LoadModel(@"Utility/Models/" + modelName);
+            Geometry = new GeoHelper(m_Utility);
+            m_Textures = new Texture[pTextureNames.Length];
+            for(int x = 0; x < pTextureNames.Length; x++)
+            {
+                m_Textures[x] = new Texture(@"ACW/Assets/Textures/" + pTextureNames[x]);
+            }
+        }
         public override void BindData(int ShaderID)
         {
            
@@ -48,8 +61,16 @@ namespace Labs.ACW.Assets
             int vPositionLocation = GL.GetAttribLocation(ShaderID, "vPosition");
             int vNormallocation = GL.GetAttribLocation(ShaderID, "vNormal");
             int vTextureLocation = GL.GetAttribLocation(ShaderID, "vTexture");
-            if(m_Texture != null)
+            if (m_Texture != null)
+            {
                 m_Texture.BindData();
+            } else if(m_Textures != null)
+            {
+                foreach(Texture i in m_Textures)
+                {
+                    i.BindData();
+                }
+            }
 
             if (!OBJ)
             {
@@ -101,6 +122,9 @@ namespace Labs.ACW.Assets
             }
             
 
+        }public Texture GetTexture()
+        {
+            return m_Texture;
         }
         public void DeleteTexture()
         {
@@ -110,8 +134,13 @@ namespace Labs.ACW.Assets
         {
 
             base.Draw(ShaderID);
-
-            if (m_Texture != null)
+            if(m_Textures != null)
+            {
+                for(int x = 0; x < m_Textures.Length; x++)
+                {
+                    m_Textures[x].Bind(ShaderID, x);
+                }
+            } else if (m_Texture != null)
             {
                 m_Texture.Bind(ShaderID);
             }

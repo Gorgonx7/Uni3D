@@ -57,12 +57,19 @@ namespace Labs.ACW
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, m_TextureData.Width, m_TextureData.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, m_TextureData.Scan0);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            
             m_TextureBitmap.UnlockBits(m_TextureData);
+        }
+        public void FlipX()
+        {
+            m_TextureBitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
         }
         public void Bind(int ShaderID)
         {
             int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture0");
-            GL.Uniform1(uTextureSamplerLocation, m_Index);
+            
+                GL.Uniform1(uTextureSamplerLocation, m_Index);
+            
 
         }
         public void Bind(int ShaderID, int TextureNumber)
