@@ -15,6 +15,9 @@ namespace Labs.ACW
 {
     public class ACWWindow : GameWindow
     {
+        /// <summary>
+        /// Constructor for the window
+        /// </summary>
         public ACWWindow()
             : base(
                 800, // Width
@@ -37,6 +40,10 @@ namespace Labs.ACW
         private Plane m_Plane;
         private PlayerCamera mStaticCamera;
         FrameBuffer test;
+        /// <summary>
+        /// Method to load all the data on to the graphics card
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
             PositionLight light = new PositionLight(new Vector3(0, 0.5f, -5), new Vector3(5f,0.015f,0.0000025f));
@@ -125,7 +132,10 @@ namespace Labs.ACW
             test = new FrameBuffer();
             base.OnLoad(e);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
@@ -157,11 +167,14 @@ namespace Labs.ACW
                     break;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            
+            Camera.s_ActiveCamera.Resize(ClientRectangle);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
