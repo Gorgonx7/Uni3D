@@ -41,11 +41,11 @@ namespace Labs.ACW
         {
             PositionLight light = new PositionLight(new Vector3(0, 0.5f, -5), new Vector3(5f,0.015f,0.0000025f));
             
-            light.SetDiffuse(new Vector3(1f, 1f, 1));
-            light.SetSpecular(new Vector3(1f, 1, 1f));
+            //light.SetDiffuse(new Vector3(1f, 1f, 1));
+           // light.SetSpecular(new Vector3(1f, 1, 1f));
             DirectionalLight dLight = new DirectionalLight(new Vector3(0, 1, 4));
-            dLight.SetDiffuse(new Vector3(0f, 1f, 1f));
-            dLight.SetSpecular(new Vector3(0, 1f, 1f));
+            //dLight.SetDiffuse(new Vector3(1f, 1f, 1f));
+            //dLight.SetSpecular(new Vector3(1, 1f, 1f));
             
             Vector3 CameraPosition = new Vector3(0, -1f, -2f);
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
@@ -65,7 +65,8 @@ namespace Labs.ACW
             mMultiTexture = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/MultiTexture.frag");
             
             model = new Model("SphereTri.obj", "Earth.jpg");
-            m_Teapot = new Model("utah-teapot.obj", new string[] { "MarbleTiles.jpg", "Texture.png" });
+            m_Teapot = new Model("utah-teapot.obj", new string[] { "Teapot.jpg", "Texture.png" });
+            //m_Teapot = new Model("utah-teapot.obj", "ACW.jpg");
             m_Plane = new Plane(0,0);
             Spotlight sLight = new Spotlight(new Vector3(0, 3, 5), new Vector3(1f, 0, 0), 20, 20f, (m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(0,-2.5f,-0f))).ExtractTranslation());
           
@@ -79,27 +80,29 @@ namespace Labs.ACW
             //mProjection = Matrix4.CreateOrthographic((float)ClientRectangle.Width/8, ClientRectangle.Height/8, 0.1f, 100);
             
             light.Bind(mShader.ShaderProgramID);
-            //sLight.Bind(mShader.ShaderProgramID);
+            sLight.Bind(mShader.ShaderProgramID);
            // model.BindData(mShader.ShaderProgramID);
     
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
+            m_Teapot.BindData(mTextureShader.ShaderProgramID);
             
             
-            model.BindData(mTextureShader.ShaderProgramID);
            
             //m_Plane.BindData(mTextureShader.ShaderProgramID);
            
             
             
-            light.Bind(mTextureShader.ShaderProgramID);
+            //light.Bind(mTextureShader.ShaderProgramID);
             dLight.Bind(mTextureShader.ShaderProgramID);
-            sLight.Bind(mTextureShader.ShaderProgramID);
+            //sLight.Bind(mTextureShader.ShaderProgramID);
+
+
             GL.UseProgram(mMultiTexture.ShaderProgramID);
-            m_Teapot.BindData(mMultiTexture.ShaderProgramID);
-            light.Bind(mTextureShader.ShaderProgramID);
-            dLight.Bind(mTextureShader.ShaderProgramID);
-            sLight.Bind(mTextureShader.ShaderProgramID);
+            model.BindData(mMultiTexture.ShaderProgramID);;
+            //light.Bind(mMultiTexture.ShaderProgramID);
+            dLight.Bind(mMultiTexture.ShaderProgramID);
+            sLight.Bind(mMultiTexture.ShaderProgramID);
 
 
             GL.BindVertexArray(0);
@@ -129,10 +132,12 @@ namespace Labs.ACW
             switch (e.KeyChar)
             {
                 case 'd':
-                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(0.025f));
+                    //Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(-0.05f, 0.0f, 0.0f));
+                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(0.05f));
                     break;
                 case 'a':
-                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(-0.025f));
+                    //Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(0.05f, 0.0f, 0.0f));
+                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(-0.05f));
                     break;
                 case 's':
                     Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(0.0f, 0.0f, -0.05f));
