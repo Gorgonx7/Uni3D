@@ -161,40 +161,7 @@ namespace Labs.ACW
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            GL.Viewport(this.ClientRectangle);
-            if (mShader != null)
-            {
-                int uProjectionLocation = GL.GetUniformLocation(mShader.ShaderProgramID, "uProjection");
-                int windowHeight = this.ClientRectangle.Height;
-                int windowWidth = this.ClientRectangle.Width;
-                if (windowHeight > windowWidth)
-                {
-                    if (windowWidth < 1)
-                    {
-
-                        windowWidth = 1;
-                    }
-                    float ratio = windowHeight / windowWidth;
-                    mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
-                    GL.UniformMatrix4(uProjectionLocation, true, ref mProjection);
-                    int uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
-
-                    GL.UniformMatrix4(uProjection, true, ref mProjection);
-                }
-                else
-                {
-                    if (windowHeight < 1)
-                    {
-                        windowHeight = 1;
-                    }
-                    float ratio = windowWidth / windowHeight;
-                    Matrix4 mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)ClientRectangle.Width / ClientRectangle.Height, 0.1f, 100);
-                    GL.UniformMatrix4(uProjectionLocation, true, ref mProjection);
-                    int uProjection = GL.GetUniformLocation(mTextureShader.ShaderProgramID, "uProjection");
-
-                    GL.UniformMatrix4(uProjection, true, ref mProjection);
-                }
-            }
+            
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)

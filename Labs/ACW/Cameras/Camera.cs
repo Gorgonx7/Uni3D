@@ -9,6 +9,8 @@ using OpenTK.Graphics.OpenGL;
 using Labs.ACW.Lighting;
 using Labs.Utility;
 using Labs.ACW.Assets;
+using System.Drawing;
+
 namespace Labs.ACW.Cameras
 {
     abstract class Camera 
@@ -47,6 +49,44 @@ namespace Labs.ACW.Cameras
             m_Projection = pProjection;
             m_View = pTransform;
             m_Position = pTransform.ExtractTranslation();
+        }
+        public virtual void Resize(Rectangle pScreen)
+        {
+            GL.Viewport(pScreen);
+
+            for (int x = 0; x < ShaderUtility.ShaderIDs.Count; x++)
+            {
+                int uProjectionLocation = GL.GetUniformLocation(ShaderUtility.ShaderIDs[x], "uProjection");
+                int windowHeight = pScreen.Height;
+                int windowWidth = pScreen.Width;
+                if (windowHeight > windowWidth)
+                {
+                    if (windowWidth < 1)
+                    {
+
+                        windowWidth = 1;
+                    }
+                    float ratio = windowHeight / windowWidth;
+                    Matrix4 mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)pScreen.Width / pScreen.Height, 0.1f, 100);
+                    GL.UniformMatrix4(uProjectionLocation, true, ref mProjection);
+                    int uProjection = GL.GetUniformLocation(ShaderUtility.ShaderIDs[x], "uProjection");
+
+                    GL.UniformMatrix4(uProjection, true, ref mProjection);
+                }
+                else
+                {
+                    if (windowHeight < 1)
+                    {
+                        windowHeight = 1;
+                    }
+                    float ratio = windowWidth / windowHeight;
+                    Matrix4 mProjection = Matrix4.CreatePerspectiveFieldOfView(1, (float)pScreen.Width / pScreen.Height, 0.1f, 100);
+                    GL.UniformMatrix4(uProjectionLocation, true, ref mProjection);
+                    int uProjection = GL.GetUniformLocation(ShaderUtility.ShaderIDs[x], "uProjection");
+
+                    GL.UniformMatrix4(uProjection, true, ref mProjection);
+                }
+            }
         }
         public void SetViewMatrix(Matrix4 pMatrix)
         {
