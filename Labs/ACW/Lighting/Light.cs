@@ -32,6 +32,10 @@ namespace Labs.ACW.Lighting
         protected Vector3 m_SpotDirection;
         protected int m_LightNumber;
         protected List<int> m_Shader_IDs = new List<int>();
+        /// <summary>
+        /// default light constructor
+        /// </summary>
+        /// <param name="pPosition"></param>
         public Light(Vector4 pPosition)
         {
             m_LightNumber = s_LightNumber;
@@ -48,14 +52,26 @@ namespace Labs.ACW.Lighting
             m_SpotDirection = new Vector3(0, 0, 0);
             s_Lights.Add(this);
         }
+        /// <summary>
+        /// gets the static list of all created lights
+        /// </summary>
+        /// <returns></returns>
         public static List<Light> GetLights()
         {
             return s_Lights;
         }
+        /// <summary>
+        /// returns the position of the light
+        /// </summary>
+        /// <returns></returns>
         public Vector4 GetPosition()
         {
             return m_Position;
         }
+        /// <summary>
+        /// sets the position and updates the shaders that the light is bound too
+        /// </summary>
+        /// <param name="pPosition"></param>
         public virtual void SetPosition(Vector4 pPosition)
         {
             m_Position = pPosition;
@@ -66,10 +82,19 @@ namespace Labs.ACW.Lighting
                 GL.Uniform4(uLightPosition, m_Position);
             }
         }
+        /// <summary>
+        /// allows the child classes to have rotation element
+        /// </summary>
+        /// <param name="pPosition"></param>
+        /// <param name="pTransform"></param>
         public virtual void SetPosition(Vector4 pPosition, Matrix4 pTransform)
         {
 
         }
+        /// <summary>
+        /// Binds the data to the shader initially
+        /// </summary>
+        /// <param name="ShaderID"></param>
         public virtual void Bind(int ShaderID)
         {
             m_Shader_IDs.Add(ShaderID);
@@ -98,14 +123,26 @@ namespace Labs.ACW.Lighting
             GL.Uniform3(SpotlightDirection, m_SpotDirection);
 
         }
+        /// <summary>
+        /// set the diffuse colour of the light
+        /// </summary>
+        /// <param name="pColour"></param>
         public void SetDiffuse(Vector3 pColour)
         {
             m_DiffuseColour = new Vector4(pColour, 1);
         }
+        /// <summary>
+        /// set the specular colour of the light
+        /// </summary>
+        /// <param name="pColour"></param>
         public void SetSpecular(Vector3 pColour)
         {
             m_SpecularColour = new Vector4(pColour, 1);
         }
+        /// <summary>
+        /// sets the ambiant colour of the light
+        /// </summary>
+        /// <param name="pColour"></param>
         public void SetAmbinat(Vector3 pColour)
         {
             m_AmbiantColour = new Vector4(pColour, 1);

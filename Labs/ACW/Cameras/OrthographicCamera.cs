@@ -9,16 +9,35 @@ using OpenTK.Graphics.OpenGL;
 using Labs.Utility;
 namespace Labs.ACW.Cameras
 {
+    /// <summary>
+    /// creates a orthographic camera at the given position and creates a projection matrix
+    /// </summary>
     class OrthographicCamera : Camera
     {
         public OrthographicCamera(Matrix4 pTransform, Rectangle pScreen) : base(pTransform, Matrix4.CreateOrthographic(-50 * (float)pScreen.Width/(float)pScreen.Height , 50 * pScreen.Width/pScreen.Height , 0.1f, 100))
         {
 
         }
+        /// <summary>
+        /// stops the camera from moving
+        /// </summary>
+        /// <param name="pTransform"></param>
         protected override void MoveCamera(Matrix4 pTransform)
         {
            
         }
+        /// <summary>
+        /// makes the camera unrotateable
+        /// </summary>
+        /// <param name="pRotation"></param>
+        public override void Transform(float pRotation)
+        {
+           
+        }
+        /// <summary>
+        /// makes it so that the camera adapts to the screen being resized
+        /// </summary>
+        /// <param name="pScreen"></param>
         public override void Resize(Rectangle pScreen)
         {
             float windowWidth = pScreen.Width;

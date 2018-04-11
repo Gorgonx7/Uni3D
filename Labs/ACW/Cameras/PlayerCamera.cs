@@ -8,6 +8,9 @@ using System.Drawing;
 
 namespace Labs.ACW.Cameras
 {
+    /// <summary>
+    /// creates a player controlled camera
+    /// </summary>
     class PlayerCamera : Camera
     {
         public PlayerCamera(Vector3 pPosition, Vector3 pDirection, Vector3 pRight, Rectangle pScreen) : base(pPosition, pDirection, pRight, Matrix4.CreatePerspectiveFieldOfView(1, (float)pScreen.Width / pScreen.Height, 0.1f, 100))

@@ -8,6 +8,10 @@ namespace Labs.ACW.Lighting
 {
     class DirectionalLight : Light
     {
+        /// <summary>
+        /// creates a directional light
+        /// </summary>
+        /// <param name="pPosition"></param>
         public DirectionalLight(Vector3 pPosition) : base(new Vector4(pPosition,0))
         {
 

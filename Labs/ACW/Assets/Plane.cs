@@ -12,7 +12,9 @@ namespace Labs.ACW.Assets
     {
         // create a plane in the world that is of width w and height h for use when testing texturing and lighting, 
         //should be easy enough to create using a standared array with scaling as I have no need for collision;
-
+        /// <summary>
+        /// this is the data for the plane with normals and texture coordinates
+        /// </summary>
         float[] vertices = new float[] {-10, 0, -10, 0, 1, 0, 0, 0,
                                         -10, 0,  10, 0, 1, 0, 0, 1,
                                          10, 0,  10, 0, 1, 0, 1, 1,
@@ -22,7 +24,7 @@ namespace Labs.ACW.Assets
         
 
         /// <summary>
-        /// 
+        /// creates a new plane
         /// </summary>
         /// <param name="pWidth"></param>
         /// <param name="pHeight"></param>
@@ -54,10 +56,18 @@ namespace Labs.ACW.Assets
             Transformation = Matrix4.CreateTranslation(0, 0, -5f);
             
         }
+        /// <summary>
+        /// creates a plane with a texture
+        /// </summary>
+        /// <param name="texture"></param>
         public Plane(Texture texture)
         {
             m_Texture = texture;
         }
+        /// <summary>
+        /// binds the plane to the shader
+        /// </summary>
+        /// <param name="ShaderID"></param>
         public override void BindData(int ShaderID)
         {
             int vPositionLocation = GL.GetAttribLocation(ShaderID, "vPosition");
@@ -78,6 +88,10 @@ namespace Labs.ACW.Assets
             }
             //base.BindData(ShaderID);
         }
+        /// <summary>
+        /// draws the plane to the current shader
+        /// </summary>
+        /// <param name="ShaderID"></param>
         public override void Draw(int ShaderID)
         {
             base.Draw(ShaderID);

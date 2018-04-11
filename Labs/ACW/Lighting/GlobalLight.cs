@@ -11,6 +11,11 @@ namespace Labs.ACW.Lighting
     static class GlobalLight
     {
         private static Vector4 AmbiantColour;
+        /// <summary>
+        /// sets a universial global ambiance
+        /// </summary>
+        /// <param name="LightColour"></param>
+        /// <param name="ShaderID"></param>
         public static void setAmbiantLightColour(Vector4 LightColour, int ShaderID)
         {
             AmbiantColour = LightColour;

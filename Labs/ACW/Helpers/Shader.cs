@@ -11,6 +11,9 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics;
 namespace Labs.ACW
 {
+    /// <summary>
+    /// legasy code for a que based structure I was going to use for scenegraphs
+    /// </summary>
     struct Drawable
     {
         GeometryNode m_Drawable;

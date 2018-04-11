@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 namespace Labs.ACW
 {
+    /// <summary>
+    /// creates a new frame buffer and manages it's content
+    /// </summary>
     class FrameBuffer
     {
         private int FramebufferID;
@@ -15,6 +18,9 @@ namespace Labs.ACW
         private int DepthBufferID;
         private const int ClientWidth = 1024;
         private const int ClientHeight = 768;
+        /// <summary>
+        /// constructs and generates all the buffers, binds them to one frame buffer objects
+        /// </summary>
         public FrameBuffer()
         {
             // gen frame buffer
@@ -42,16 +48,10 @@ namespace Labs.ACW
                 throw new Exception("Framebuffer incomplete");
             }
         }
-        public void GetData()
-        {
-            //Bitmap b = new Bitmap(ClientWidth, ClientHeight);
-            //var bits = b.LockBits(new Rectangle(0, 0, ClientWidth, ClientHeight), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            //GL.ReadPixels(0, 0, ClientWidth, ClientHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bits.Scan0);
-            GL.Ext.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.Ext.DeleteFramebuffers(1, ref FramebufferID);
-           // b.UnlockBits(bits);
-            //return b;
-        }
+        
+        /// <summary>
+        /// prepares the frame buffer for drawing too
+        /// </summary>
         public void Draw()
         {
             GL.BindTexture(TextureTarget.Texture2D, 0);
@@ -60,6 +60,10 @@ namespace Labs.ACW
             GL.Viewport(0, 0, 1024, 768);
 
         }
+        /// <summary>
+        /// dumps the data to the main frame buffer
+        /// </summary>
+        /// <param name="ClientRectangle"></param>
         public void Dump(Rectangle ClientRectangle)
         {
             GL.BindFramebuffer( FramebufferTarget.ReadFramebuffer, FramebufferID);
@@ -68,6 +72,10 @@ namespace Labs.ACW
             GL.Viewport(ClientRectangle);
             GL.BlitFramebuffer(0, 0, ClientWidth, ClientHeight, 0, 0, ClientRectangle.Width, ClientRectangle.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
         }
+        /// <summary>
+        /// returns the ID for the texture
+        /// </summary>
+        /// <returns></returns>
         public int GetTexture()
         {
             return FrameTextureID;

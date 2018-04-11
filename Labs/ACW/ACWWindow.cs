@@ -96,7 +96,7 @@ namespace Labs.ACW
             sLight.Bind(mShader.ShaderProgramID);
             //dLight.Bind(mShader.ShaderProgramID);
             // model.BindData(mShader.ShaderProgramID);
-    
+            #region shader 2
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
             m_Teapot.BindData(mTextureShader.ShaderProgramID);
@@ -110,7 +110,7 @@ namespace Labs.ACW
             light.Bind(mTextureShader.ShaderProgramID);
             dLight.Bind(mTextureShader.ShaderProgramID);
             sLight.Bind(mTextureShader.ShaderProgramID);
-
+            #endregion
 
             GL.UseProgram(mMultiTexture.ShaderProgramID);
             model.BindData(mMultiTexture.ShaderProgramID);;
@@ -186,7 +186,7 @@ namespace Labs.ACW
             }
         }
         /// <summary>
-        /// 
+        /// resizes the screen
         /// </summary>
         /// <param name="e"></param>
         protected override void OnResize(EventArgs e)
@@ -194,7 +194,10 @@ namespace Labs.ACW
             base.OnResize(e);
             Camera.s_ActiveCamera.Resize(ClientRectangle);
         }
-
+        /// <summary>
+        /// updates the objects on the screen
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
  	        base.OnUpdateFrame(e);
@@ -205,7 +208,10 @@ namespace Labs.ACW
             // model.Transform(Matrix4.CreateRotationX(0.1f));
            
         }
-
+        /// <summary>
+        /// renders to the render buffer and then dumps the data to draw the frame buffer
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             //PostProcessor.RenderToBuffer();
@@ -226,7 +232,9 @@ namespace Labs.ACW
             this.SwapBuffers();
         }
         
-
+        /// <summary>
+        /// legasy code to make a scene graph
+        /// </summary>
         private void MakeTree()
         {
             mRoot = new GroupNode();
@@ -236,7 +244,10 @@ namespace Labs.ACW
             mRoot.AddNode(WorldTransform);
 
         }
-        
+        /// <summary>
+        /// deletes all the data
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnUnload(EventArgs e)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);

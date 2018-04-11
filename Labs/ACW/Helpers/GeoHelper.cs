@@ -7,58 +7,9 @@ using OpenTK.Graphics.OpenGL;
 using Labs.Utility;
 namespace Labs.ACW
 {
-    #region Legacy
-    /* class GeoHelper
-     {
-         private static Dictionary<float[],uint> vertexDictionary = new Dictionary<float[], uint>();
-
-         public static float[] GetVertexData()
-         {
-
-             List<float[]> DataHolder = new List<float[]>(vertexDictionary.Keys);
-             List<float> Holder = new List<float>();
-             for (int x = 0; x < DataHolder.Count; x++)
-             {
-                 for(int y = 0; y < DataHolder[x].Length; y++) {
-                     Holder.Add(DataHolder[x][y]);
-                 }
-             }
-             return Holder.ToArray();
-         }
-         private uint[] m_Indecies;
-         public GeoHelper(float[] pVertex, int LengthOfVertex)
-         {
-             float[][] Vertecies = new float[pVertex.Length/LengthOfVertex][];
-             for (int x = 0; x < pVertex.Length; x += LengthOfVertex)
-             {
-                 float[] holder = new float[LengthOfVertex];
-                 for(int y = 0; y < LengthOfVertex; y++)
-                 {
-                     holder[y] = pVertex[x];
-                 }
-                 Vertecies[x] = holder;
-             }
-             m_Indecies = GetIndecies(Vertecies);
-         }
-         private uint[] GetIndecies(float[][] pVertecies)
-         {
-             uint[] Output = new uint[pVertecies.Length];
-             for (int x = 0; x < pVertecies.Length; x++)
-             {
-                 if (vertexDictionary.TryGetValue(pVertecies[x], out uint value))
-                 {
-                     Output[x] = value;
-                 }
-                 else
-                 {
-                     vertexDictionary.Add(pVertecies[x],(uint)vertexDictionary.Count);
-                 }
-             }
-             return Output;
-         }
-
-     }*/
-    #endregion
+    /// <summary>
+    /// struct that holds the information for binding to the shader
+    /// </summary>
     struct ShaderAttribute {
         int m_Reference;
         int m_VertexNumber;
@@ -112,6 +63,11 @@ namespace Labs.ACW
         public float[] mVertices { get; private set; }
         public uint[] mIndices { get; private set; }
         private int mVAO_ID;
+        /// <summary>
+        /// Creates geometry that has just vertex
+        /// </summary>
+        /// <param name="pVertices">The data</param>
+        /// <param name="pVertexLength">The length of a vertex</param>
         public GeoHelper(float[] pVertices, int pVertexLength)
         {
             mVBO_IDs = new int[1];
@@ -124,7 +80,12 @@ namespace Labs.ACW
             mVertices = pVertices;
             
         }
-
+        /// <summary>
+        /// The same as the above constructor just with indices
+        /// </summary>
+        /// <param name="pVertices"></param>
+        /// <param name="pIndices"></param>
+        /// <param name="pVertexLength"></param>
         public GeoHelper(float[] pVertices, uint[] pIndices, int pVertexLength)
         {
             mVBO_IDs = new int[2];
@@ -137,6 +98,10 @@ namespace Labs.ACW
             mVertices = pVertices;
             mIndices = pIndices;
         }
+        /// <summary>
+        /// creates geometry from a model utility
+        /// </summary>
+        /// <param name="modelUtility"></param>
         public GeoHelper(ModelUtility modelUtility)
         {
             mVBO_IDs = new int[2];
@@ -148,6 +113,9 @@ namespace Labs.ACW
             mVertices = modelUtility.Vertices;
             mIndices = modelUtility.Indices;
         }
+        /// <summary>
+        /// binds the geometry to the buffer
+        /// </summary>
         public void BindBuffer()
         {
             
@@ -171,6 +139,10 @@ namespace Labs.ACW
                 }
             }
         }
+        /// <summary>
+        /// Generates teh array buffers and binds the properties to the shader
+        /// </summary>
+        /// <param name="properties"></param>
         public void GenerateArrayBuffers(ShaderAttribute[] properties)
         {
             mVAO_ID = GL.GenVertexArray();
@@ -190,19 +162,33 @@ namespace Labs.ACW
              GL.EnableVertexAttribArray(vColourLocation);
              GL.EnableVertexAttribArray(vPositionLocation);*/
         }
-
+        /// <summary>
+        /// just generates array buffers but does not bind anything
+        /// </summary>
+        /// <returns></returns>
         public int GenerateArrayBuffers()
         {
 
             return mVAO_ID = GL.GenVertexArray();
         }
+        /// <summary>
+        /// returns the vbo ids
+        /// </summary>
+        /// <returns></returns>
         public int[] GetVBO_IDs() {
             return mVBO_IDs;
         }
+        /// <summary>
+        /// returns the VAO id
+        /// </summary>
+        /// <returns></returns>
         public int GetVAO_ID()
         {
             return mVAO_ID;
         }
+        /// <summary>
+        /// deletes the content in all the buffers
+        /// </summary>
         public static void DeleteBuffers() {
             GL.DeleteBuffers(s_VBO_IDs.Count, s_VBO_IDs.ToArray());
             GL.DeleteVertexArrays(s_VAO_IDs.Count, s_VAO_IDs.ToArray());

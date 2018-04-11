@@ -13,8 +13,12 @@ using System.Drawing.Imaging;
 
 namespace Labs.ACW
 {
+    /// <summary>
+    /// legasy code for post processing
+    /// </summary>
     static class PostProcessor
     {
+
         private static ShaderUtility SimpleShader = new ShaderUtility("ACW/Shaders/FBOPassThrough.vert", "ACW/Shaders/FBOPassThrough.frag");
         private static float[] verts = new float[] { -1.0f,  1.0f,
                                                       1.0f,  1.0f,

@@ -9,7 +9,9 @@ using OpenTK;
 using Labs.ACW;
 namespace Labs.ACW.Assets
 {
-    
+    /// <summary>
+    /// Creates a model, loading in it's data and 
+    /// </summary>
     class Model : GameObject
     {
         private ModelUtility m_Utility;       
@@ -17,6 +19,10 @@ namespace Labs.ACW.Assets
         private int[] m_VBO_IDs; 
         private bool OBJ = false;
         public Texture[] m_Textures = null;
+        /// <summary>
+        /// Mesh with a material
+        /// </summary>
+        /// <param name="modelName"></param>
         public Model(string modelName)
         {
             if(modelName.Substring(modelName.IndexOf('.')) == ".obj"){
@@ -26,6 +32,11 @@ namespace Labs.ACW.Assets
             Geometry = new GeoHelper(m_Utility);
             Transformation = Matrix4.CreateRotationY(0.8f) * Matrix4.CreateTranslation(0, 0f, 0f);
         }
+        /// <summary>
+        /// Mesh with a texture
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <param name="TextureName"></param>
         public Model(string modelName, string TextureName)
         {
             if (modelName.Substring(modelName.IndexOf('.')) == ".obj")
@@ -38,6 +49,11 @@ namespace Labs.ACW.Assets
             m_Texture = new Texture(@"ACW/Assets/Textures/" + TextureName);
 
         }
+        /// <summary>
+        /// mesh with multiple textures
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <param name="pTextureNames"></param>
         public Model(string modelName, string[] pTextureNames)
         {
             if (modelName.Substring(modelName.IndexOf('.')) == ".obj")
@@ -52,6 +68,10 @@ namespace Labs.ACW.Assets
                 m_Textures[x] = new Texture(@"ACW/Assets/Textures/" + pTextureNames[x]);
             }
         }
+        /// <summary>
+        /// Binds the data to the shader
+        /// </summary>
+        /// <param name="ShaderID"></param>
         public override void BindData(int ShaderID)
         {
            
@@ -122,14 +142,26 @@ namespace Labs.ACW.Assets
             }
             
 
-        }public Texture GetTexture()
+        }
+        /// <summary>
+        /// returns the texture
+        /// </summary>
+        /// <returns></returns>
+        public Texture GetTexture()
         {
             return m_Texture;
         }
+        /// <summary>
+        /// deletes the texture
+        /// </summary>
         public void DeleteTexture()
         {
             this.m_Texture.Dispose();
         }
+        /// <summary>
+        /// Draws the texture to the frame buffer that is currently bound using the triangle primative types
+        /// </summary>
+        /// <param name="ShaderID"></param>
         public override void Draw(int ShaderID)
         {
 
@@ -148,7 +180,10 @@ namespace Labs.ACW.Assets
             
             GL.DrawElements(PrimitiveType.Triangles, GetGeometry().mIndices.Length, DrawElementsType.UnsignedInt, 0);
         }
-        
+        /// <summary>
+        /// legasy code to pass the shader to the model
+        /// </summary>
+        /// <param name="ShaderUtility"></param>
         public void PassShader(ShaderUtility ShaderUtility)
         {
             m_Shader = ShaderUtility;

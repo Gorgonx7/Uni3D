@@ -10,6 +10,9 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 namespace Labs.ACW
 {
+    /// <summary>
+    /// Helps with the loading and managing of textures
+    /// </summary>
     class Texture
     {
         public static List<int> s_TextureIDs = new List<int>();
@@ -19,6 +22,10 @@ namespace Labs.ACW
         static int textureNumber = 1;
         int m_TextureID;
         int m_Index;
+        /// <summary>
+        /// generates a texture form a path
+        /// </summary>
+        /// <param name="Path"></param>
         public Texture(string Path)
         {
             m_Unit = TextureUnit.Texture0 + textureNumber;
@@ -39,6 +46,10 @@ namespace Labs.ACW
                 throw new Exception("Could not find file " + filepath);
             }
         }
+        /// <summary>
+        /// legasy code to create a texture from a bitmap for post rendering
+        /// </summary>
+        /// <param name="pBitmap"></param>
         public Texture(Bitmap pBitmap) {
             m_Unit = TextureUnit.Texture0;
             m_Index = 0;
@@ -48,6 +59,9 @@ namespace Labs.ACW
             m_TextureData = m_TextureBitmap.LockBits(new Rectangle(0, 0, m_TextureBitmap.Width, m_TextureBitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
         }
+        /// <summary>
+        /// Binds the texture to the texture unit
+        /// </summary>
         public void BindData()
         {
             GL.ActiveTexture(m_Unit);
@@ -60,10 +74,17 @@ namespace Labs.ACW
             
             m_TextureBitmap.UnlockBits(m_TextureData);
         }
+        /// <summary>
+        /// flips a texture on a axis
+        /// </summary>
         public void FlipX()
         {
             m_TextureBitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
         }
+        /// <summary>
+        /// binds the data to a buffer
+        /// </summary>
+        /// <param name="ShaderID"></param>
         public void Bind(int ShaderID)
         {
             int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture0");
@@ -72,16 +93,26 @@ namespace Labs.ACW
             
 
         }
+        /// <summary>
+        /// binds the data to the shader as an array
+        /// </summary>
+        /// <param name="ShaderID"></param>
+        /// <param name="TextureNumber"></param>
         public void Bind(int ShaderID, int TextureNumber)
         {
             int uTextureSamplerLocation = GL.GetUniformLocation(ShaderID, "uTexture[" + TextureNumber + "]");
             GL.Uniform1(uTextureSamplerLocation, m_Index);
         }
+        /// <summary>
+        /// deletes all the data
+        /// </summary>
         public static void Delete()
         {
             GL.DeleteTextures(s_TextureIDs.Count, s_TextureIDs.ToArray());
         }
-
+        /// <summary>
+        /// deletes a indervidual data member
+        /// </summary>
         public void Dispose()
         {
             GL.DeleteTexture(m_TextureID);

@@ -13,6 +13,9 @@ using System.Drawing;
 
 namespace Labs.ACW.Cameras
 {
+    /// <summary>
+    ///  abstract base class for the camera classes, this contains the basic functionallity for any type of camera
+    /// </summary>
     abstract class Camera 
     {
         /*
@@ -50,6 +53,9 @@ namespace Labs.ACW.Cameras
             m_View = pTransform;
             m_Position = pTransform.ExtractTranslation();
         }
+        /// <summary>
+        /// deals with when the screen is resized
+        /// </summary>
         public virtual void Resize(Rectangle pScreen)
         {
             GL.Viewport(pScreen);
@@ -88,14 +94,25 @@ namespace Labs.ACW.Cameras
                 }
             }
         }
+        /// <summary>
+        /// sets the view matrix
+        /// </summary>
+        /// <param name="pMatrix"></param>
         public void SetViewMatrix(Matrix4 pMatrix)
         {
             m_View = pMatrix;
         }
+        /// <summary>
+        /// sets the view matrix to look at the target
+        /// </summary>
+        /// <param name="pTarget"></param>
         public void SetViewMatrix(Vector3 pTarget)
         {
             m_View = Matrix4.LookAt(m_Position, pTarget, m_Up);
         }
+        /// <summary>
+        /// activates the camera and binds it to all shaders
+        /// </summary>
         public void Activate()
         {
             
@@ -110,12 +127,20 @@ namespace Labs.ACW.Cameras
             }
 
         }
+        /// <summary>
+        /// calls the move camera method
+        /// </summary>
+        /// <param name="pTransform"> the transform that moves the camera</param>
         public void Transform(Matrix4 pTransform) {
 
             MoveCamera(pTransform);
             
         }
-        public void Transform(float pRotation)
+        /// <summary>
+        /// Rotates the camera
+        /// </summary>
+        /// <param name="pRotation"></param>
+        public virtual void Transform(float pRotation)
         {
             Matrix4 Trans = Matrix4.CreateRotationY(pRotation);
             m_View *= Trans;
@@ -126,6 +151,10 @@ namespace Labs.ACW.Cameras
             }
             Activate();
         }
+        /// <summary>
+        /// Moves the camera and allows for the method to be overloaded by child classes where the camera shouldn't move
+        /// </summary>
+        /// <param name="pTransform"></param>
         protected virtual void MoveCamera(Matrix4 pTransform)
         {
             m_View *= pTransform;
