@@ -31,7 +31,7 @@ namespace Labs.ACW.Lighting
         protected float m_SpotCutOff, m_SpotExponent;
         protected Vector3 m_SpotDirection;
         protected int m_LightNumber;
-        private List<int> m_Shader_IDs = new List<int>();
+        protected List<int> m_Shader_IDs = new List<int>();
         public Light(Vector4 pPosition)
         {
             m_LightNumber = s_LightNumber;
@@ -56,7 +56,7 @@ namespace Labs.ACW.Lighting
         {
             return m_Position;
         }
-        public void SetPosition(Vector4 pPosition)
+        public virtual void SetPosition(Vector4 pPosition)
         {
             m_Position = pPosition;
             for (int x = 0; x < m_Shader_IDs.Count; x++)
@@ -65,6 +65,10 @@ namespace Labs.ACW.Lighting
                 int uLightPosition = GL.GetUniformLocation(m_Shader_IDs[x],"uLight[" + m_LightNumber + "].position");
                 GL.Uniform4(uLightPosition, m_Position);
             }
+        }
+        public virtual void SetPosition(Vector4 pPosition, Matrix4 pTransform)
+        {
+
         }
         public virtual void Bind(int ShaderID)
         {

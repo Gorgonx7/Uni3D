@@ -34,11 +34,13 @@ namespace Labs.ACW
         }
         private ShaderUtility mShader, mTextureShader, mMultiTexture;
         private GroupNode mRoot;
-        private Matrix4 mView, mProjection;
+        private Matrix4 mView;
         private Model model;
-        private Model m_Teapot;
+        private Model m_Teapot, m_Cylinder;
         private Plane m_Plane;
-        private PlayerCamera mStaticCamera;
+        private PlayerCamera mPlayerCamera;
+        private StaticCamera mStaticCamera;
+        private OrthographicCamera mOrthographicCamera, mFrontCamera;
         FrameBuffer test;
         /// <summary>
         /// Method to load all the data on to the graphics card
@@ -56,11 +58,15 @@ namespace Labs.ACW
             
             Vector3 CameraPosition = new Vector3(0, -1f, -2f);
             Vector3 CameraDirection = CameraPosition - new Vector3(0, 0, 0);
-            //mView = Matrix4.CreateRotationX(1.571f) * Matrix4.CreateTranslation(0f, -4, -25f);
+            mView = Matrix4.CreateRotationX(1.571f) * Matrix4.CreateTranslation(0f, -4, -25f);
+            mOrthographicCamera = new OrthographicCamera(mView, ClientRectangle);
             mView = Matrix4.CreateRotationX(0.3f) * Matrix4.CreateTranslation(0, -6, -20);
-            mStaticCamera = new PlayerCamera(mView, ClientRectangle);
-           
-            mStaticCamera.SetViewMatrix(mView);
+            mPlayerCamera = new PlayerCamera(mView, ClientRectangle);
+            mView = Matrix4.CreateRotationY(-0.78f) * Matrix4.CreateRotationX(0.3f) * Matrix4.CreateTranslation(3, -6, -20);
+            mStaticCamera = new StaticCamera(mView, ClientRectangle);
+            mView = Matrix4.CreateTranslation(0, -6, -20);
+            mFrontCamera = new OrthographicCamera(mView, ClientRectangle);
+            //mStaticCamera.SetViewMatrix(mView);
            
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
@@ -70,7 +76,7 @@ namespace Labs.ACW
             mTextureShader = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/Texture.frag");
             mShader = new ShaderUtility("ACW/Shaders/Model.vert", "ACW/Shaders/Model.frag");
             mMultiTexture = new ShaderUtility("ACW/Shaders/Texture.vert", "ACW/Shaders/MultiTexture.frag");
-            
+            m_Cylinder = new Model("Cylinder.bin");
             model = new Model("SphereTri.obj", "Earth.jpg");
             m_Teapot = new Model("utah-teapot.obj", new string[] { "Teapot.jpg", "Texture.png" });
             //m_Teapot = new Model("utah-teapot.obj", "ACW.jpg");
@@ -79,16 +85,17 @@ namespace Labs.ACW
           
             GL.UseProgram(mShader.ShaderProgramID);
             //GL.UseProgram(mTextureShader.ShaderProgramID);
-            //GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mShader.ShaderProgramID);
+            GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mShader.ShaderProgramID);
            
             m_Plane.BindData(mShader.ShaderProgramID) ;
-            
+            m_Cylinder.BindData(mShader.ShaderProgramID);
              
             //mProjection = Matrix4.CreateOrthographic((float)ClientRectangle.Width/8, ClientRectangle.Height/8, 0.1f, 100);
             
             light.Bind(mShader.ShaderProgramID);
             sLight.Bind(mShader.ShaderProgramID);
-           // model.BindData(mShader.ShaderProgramID);
+            //dLight.Bind(mShader.ShaderProgramID);
+            // model.BindData(mShader.ShaderProgramID);
     
             GL.UseProgram(mTextureShader.ShaderProgramID);
             GlobalLight.setAmbiantLightColour(new Vector4(1f, 1f, 1f, 1f), mTextureShader.ShaderProgramID);
@@ -100,14 +107,14 @@ namespace Labs.ACW
            
             
             
-            //light.Bind(mTextureShader.ShaderProgramID);
+            light.Bind(mTextureShader.ShaderProgramID);
             dLight.Bind(mTextureShader.ShaderProgramID);
-            //sLight.Bind(mTextureShader.ShaderProgramID);
+            sLight.Bind(mTextureShader.ShaderProgramID);
 
 
             GL.UseProgram(mMultiTexture.ShaderProgramID);
             model.BindData(mMultiTexture.ShaderProgramID);;
-            //light.Bind(mMultiTexture.ShaderProgramID);
+            light.Bind(mMultiTexture.ShaderProgramID);
             dLight.Bind(mMultiTexture.ShaderProgramID);
             sLight.Bind(mMultiTexture.ShaderProgramID);
 
@@ -125,15 +132,16 @@ namespace Labs.ACW
 
             //model.Transform(Matrix4.CreateScale(0.5f));
              model.Transform(Matrix4.CreateScale(2) * m_Plane.GetTransform() * Matrix4.CreateTranslation(new Vector3(-0, 7, -3f)));
-            
+            m_Cylinder.SetTransform(model.GetTransform() * Matrix4.CreateTranslation(5,-4,5));
+            m_Cylinder.setMaterial(new Material(new Vector4(0.25f,0.25f,0.25f, 1f), new Vector4(0.4f, 0.4f, 0.4f, 1.0f), new Vector4(0.774597f, 0.774597f, 0.774597f, 1.0f), 0.6f));
             m_Teapot.Transform(Matrix4.CreateScale(0.1f) * m_Plane.GetTransform() * Matrix4.CreateTranslation(3f, 4, -0.5f));
             //m_Teapot.SetTransform(Matrix4.CreateTranslation(new Vector3(0, 0.5f, -10)));
-            mStaticCamera.Activate();
+            mPlayerCamera.Activate();
             test = new FrameBuffer();
             base.OnLoad(e);
         }
         /// <summary>
-        /// 
+        /// Move the camera or change the active camera
         /// </summary>
         /// <param name="e"></param>
         protected override void OnKeyPress(KeyPressEventArgs e)
@@ -143,11 +151,11 @@ namespace Labs.ACW
             {
                 case 'd':
                     //Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(-0.05f, 0.0f, 0.0f));
-                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(0.05f));
+                    Camera.s_ActiveCamera.Transform(0.05f);
                     break;
                 case 'a':
                     //Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(0.05f, 0.0f, 0.0f));
-                    Camera.s_ActiveCamera.Transform(Matrix4.CreateRotationY(-0.05f));
+                    Camera.s_ActiveCamera.Transform(-0.05f);
                     break;
                 case 's':
                     Camera.s_ActiveCamera.Transform(Matrix4.CreateTranslation(0.0f, 0.0f, -0.05f));
@@ -158,12 +166,22 @@ namespace Labs.ACW
 
                     break;
                 case 'z':
+                    GameObject.GlobalTransform(Matrix4.CreateRotationY(-0.05f));
                     break;
                 case 'x':
+                    GameObject.GlobalTransform(Matrix4.CreateRotationY(0.05f));
                     break;
                 case '1':
+                    mPlayerCamera.Activate();
                     break;
                 case '2':
+                    mOrthographicCamera.Activate();
+                    break;
+                case '3':
+                    mFrontCamera.Activate();
+                    break;
+                case '4':
+                    mStaticCamera.Activate();
                     break;
             }
         }
@@ -199,6 +217,7 @@ namespace Labs.ACW
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             m_Teapot.Draw(mMultiTexture.ShaderProgramID);
             m_Plane.Draw(mShader.ShaderProgramID);
+            m_Cylinder.Draw(mShader.ShaderProgramID);
             model.Draw(mTextureShader.ShaderProgramID);
             test.Dump(ClientRectangle);
 

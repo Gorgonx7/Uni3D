@@ -115,7 +115,17 @@ namespace Labs.ACW.Cameras
             MoveCamera(pTransform);
             
         }
-        
+        public void Transform(float pRotation)
+        {
+            Matrix4 Trans = Matrix4.CreateRotationY(pRotation);
+            m_View *= Trans;
+            for (int x = 0; x < Light.GetLights().Count; x++)
+            {
+                //Light.GetLights()[x].SetPosition(new Vector4(new Vector3(Light.GetLights()[x].GetPosition().Xyz) + pTransform.ExtractTranslation(), 1));
+                Light.GetLights()[x].SetPosition(Vector4.Transform(Light.GetLights()[x].GetPosition(), Trans), Matrix4.CreateRotationY(pRotation));
+            }
+            Activate();
+        }
         protected virtual void MoveCamera(Matrix4 pTransform)
         {
             m_View *= pTransform;

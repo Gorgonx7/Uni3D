@@ -71,6 +71,13 @@ namespace Labs.ACW.Assets
         {
             return Transformation;
         }
+        public static void GlobalTransform(Matrix4 pTransform)
+        {
+            for(int x = 0; x < s_Objects.Count; x++)
+            {
+                s_Objects[x].Transform(pTransform);
+            }
+        }
         public void Transform(Matrix4 pTransform)
         {
             Transformation *= Matrix4.CreateTranslation(-Transformation.ExtractTranslation()) * pTransform * Matrix4.CreateTranslation(Transformation.ExtractTranslation());
@@ -88,6 +95,10 @@ namespace Labs.ACW.Assets
             
 
 
+        }
+        public void setMaterial(Material pMaterial)
+        {
+            m_Material = pMaterial;
         }
         public void setTexture(Texture pTexture)
         {
